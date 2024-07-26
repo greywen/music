@@ -1,0 +1,9 @@
+/* pages/search/search.wxss */
+
+.footer {
+  padding: 32rpx 0rpx 48rpx 0rpx;
+  font-size: small;
+  display: flex;
+  justify-content: center;
+  color: gray;
+}

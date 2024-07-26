@@ -1,0 +1,6 @@
+<!--pages/search/search.wxml-->
+<view class="container">
+  <t-search class="serach" focus="true" bind:change="onChangeValue" bind:submit="onSubmit" bind:clear="onClear" confirm-type="search" maxlength="50" placeholder="请输入关键词" />
+  <t-cell wx:for="{{musicList}}" wx:key="id" title="{{item.name}}" description="{{item.artist + (item.album ? ' - ' + item.album : '')}}" hover />
+  <view class="footer" wx:if="{{showMore}}" bind:tap="onShowMore">加载更多</view>
+</view>

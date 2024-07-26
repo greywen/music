@@ -1,0 +1,7 @@
+{
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-search": "tdesign-miniprogram/search/search"
+  }
+}

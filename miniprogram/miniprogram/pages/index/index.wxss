@@ -1,0 +1,11 @@
+/**index.wxss**/
+
+.serach{
+  width: 100%;
+}
+
+.block--left,
+.block--right {
+  width: 100vw;
+  height: 100vh;
+}
