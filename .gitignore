@@ -1,2 +1,11 @@
+# miniprogram
 /miniprogram/node_modules
 /miniprogram/miniprogram/miniprogram_npm
+
+# nextjs
+/nextjs/node_modules
+/nextjs/.next
+/nextjs/out
+/nextjs/build
+/nextjs/.env*.local
+/nextjs/next-env.d.ts
