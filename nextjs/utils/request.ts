@@ -31,6 +31,7 @@ export const useFetch = () => {
     };
 
     return fetch(requestUrl, {
+      headers: headers,
       ...requestBody,
       signal,
     })
@@ -38,24 +39,24 @@ export const useFetch = () => {
         if (!response.ok) {
           throw response;
         }
-
+        if (headers['Content-type'].indexOf('text/plain') !== -1) {
+          return response.text();
+        }
         const contentType = response.headers.get('content-type');
         const contentDisposition = response.headers.get('content-disposition');
-
-        const result =
-          contentType &&
-          (contentType?.indexOf('application/json') !== -1 ||
-            contentType?.indexOf('text/plain') !== -1)
-            ? response.json()
-            : contentDisposition?.indexOf('attachment') !== -1
-            ? response.blob()
-            : response;
-
-        return result;
+        if (contentType && contentType.indexOf('application/json') !== -1) {
+          return response.json();
+        } else if (
+          contentDisposition &&
+          contentDisposition.indexOf('attachment') !== -1
+        ) {
+          return response.blob();
+        } else {
+          return response;
+        }
       })
       .catch(async (err) => {
         const contentType = err.headers.get('content-type');
-
         const errResult =
           contentType && contentType?.indexOf('application/problem+json') !== -1
             ? await err.json()

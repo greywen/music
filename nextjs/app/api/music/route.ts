@@ -1,16 +1,15 @@
-import { getMusicList, Source } from '@/service/music';
+import { getMusicInfo, MusicBr, Source } from '@/service/music';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const name = searchParams.get('name');
+  const id = searchParams.get('id');
   const source = (searchParams.get('source') || Source.tencent) as Source;
-  const pages = +(searchParams.get('pages') || 1);
-  const count = +(searchParams.get('count') || 20);
+  const br = +(searchParams.get('br') || 320) as MusicBr;
 
-  if (!name) {
-    throw new Error('name is required');
+  if (!id) {
+    throw new Error('id is required');
   }
 
-  const data = await getMusicList({ name, source, count, pages });
+  const data = await getMusicInfo({ id, source, br });
   return new Response(JSON.stringify(data));
 }

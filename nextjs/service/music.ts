@@ -50,7 +50,6 @@ interface IGetMusicInfoResult {
 function formatMusicResult(inputString: string): IGetMusicInfoResult {
   const regex = /jQuery\((\{.*\})\)/;
   const match = inputString.match(regex);
-
   if (match && match[1]) {
     try {
       const jsonObject = JSON.parse(match[1]);
@@ -67,9 +66,12 @@ function formatMusicResult(inputString: string): IGetMusicInfoResult {
 export async function getMusicInfo(params: IGetMusicInfoParams) {
   const { id, source = Source.tencent, br = 320 } = params;
   const fetchService = useFetch();
-  const dataString = await fetchService.get<string>(
-    `https://music-api-cn.gdstudio.xyz:22443/api.php?callback=jQuery&types=url&source=${source}&id=${id}&br=${br}`
-  );
+  const url = `https://music-api-cn.gdstudio.xyz:22443/api.php?callback=jQuery&types=url&source=${source}&id=${id}&br=${br}`;
+  const dataString = await fetchService.get<string>(url, {
+    headers: {
+      'Content-type': 'text/plain',
+    },
+  });
   return formatMusicResult(dataString);
 }
 
