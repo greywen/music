@@ -1,4 +1,4 @@
-import { CoverImgSize, getCoverImg } from '@/service/music';
+import { getCover } from '@/service/music';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,6 +9,6 @@ export async function GET(request: Request) {
     throw new Error('id is required');
   }
 
-  const data = await getCoverImg({ id, size });
+  const data = await getCover({ id, size });
   return new Response(JSON.stringify(data));
 }

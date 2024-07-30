@@ -1,14 +1,5 @@
 import { useFetch } from '@/utils/request';
 
-export enum Source {
-  tencent = 'tencent',
-  netease = 'netease',
-  kugou = 'kugou',
-}
-
-export type MusicBr = 128 | 192 | 320 | 740 | 999;
-export type CoverImgSize = 300 | 500;
-
 interface IGetMusicListParams {
   name: string;
   source?: Source;
@@ -85,7 +76,7 @@ interface IGetCoverImgResult {
   url: string;
 }
 
-export async function getCoverImg(params: IGetCoverImgParams) {
+export async function getCover(params: IGetCoverImgParams) {
   const { id, source = Source.tencent, size = 300 } = params;
   const fetchService = useFetch();
   return await fetchService.get<IGetCoverImgResult>(

@@ -1,4 +1,4 @@
-import { getMusicList, Source } from '@/service/music';
+import { getMusicList } from '@/service/music';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
