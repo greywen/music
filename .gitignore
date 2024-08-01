@@ -7,5 +7,11 @@
 /nextjs/.next
 /nextjs/out
 /nextjs/build
-/nextjs/.env*.local
+/nextjs/.env
 /nextjs/next-env.d.ts
+
+#prisma
+/nextjs/prisma/migrations
+
+#data
+/nextjs/data
