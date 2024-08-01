@@ -23,7 +23,7 @@ export async function downloadFile(
     const parsedUrl = new URL(url);
     const protocol = parsedUrl.protocol === 'https:' ? https : http;
 
-    const file = fs.createWriteStream(filePath);
+    const file = fs.createWriteStream(filePath, { flags: 'w+' });
 
     protocol
       .get(parsedUrl, (response) => {

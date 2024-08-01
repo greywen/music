@@ -1,4 +1,4 @@
-import { getLyric, Source } from '@/service/music';
+import { getLyric } from '@/service/music';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

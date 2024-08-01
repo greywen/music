@@ -35,7 +35,7 @@ interface IGetMusicInfoParams {
 interface IGetMusicInfoResult {
   url: string;
   size: number;
-  br?: MusicBr;
+  br: MusicBr;
 }
 
 function formatMusicResult(inputString: string): IGetMusicInfoResult {

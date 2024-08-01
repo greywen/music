@@ -6,7 +6,7 @@ enum Source {
 type MusicBr = 128 | 192 | 320 | 740 | 999;
 type CoverImgSize = 300 | 500;
 
-interface IMusicList {
+interface IMusic {
   id: string;
   name: string;
   artist: string[];
