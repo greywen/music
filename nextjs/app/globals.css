@@ -1,0 +1,65 @@
+:root {
+    --clr-primary-100: #0079ff;
+    --clr-primary-200: #697c9a;
+    --clr-primary-300: #4b6a9b;
+    --clr-primary-400: #2b3442;
+    --clr-primary-500: #f6f8ff;
+    --clr-primary-600: #fefefe;
+    --clr-primary-700: #60abff;
+
+    --clr-dark-mode-100: #ffffff;
+    --clr-dark-mode-200: #141d2f;
+    --clr-dark-mode-300: #1e2a47;
+
+    --ff: sans-serif;
+
+    --fw-400: 400;
+    --fw-500: 700;
+
+    --fs-title            : 1.625rem;
+    --fs-toggle           : 0.8125rem;
+    --fs-button           : 0.875rem;
+    --fs-input-placeholder: 0.8125rem;
+    --fs-name             : 1rem;
+    --fs-username         : 0.8125rem;
+    --fs-date             : 0.8125rem;
+    --fs-bio              : 0.8125rem;
+    --fs-repos            : 0.6875rem;
+    --fs-stat-number      : 1rem;
+    --fs-social           : 0.8125rem;
+
+    --br-100: 0.625rem;
+    --br-200: 0.9375rem;
+
+    --bs-100: 0px 16px 30px -10px rgba(70, 96, 187, 0.198567);
+
+    --max-width-100: 20.4375rem;
+    --max-width-200: 35.8125rem;
+    --max-width-300: 45.625rem;
+}
+
+body {
+    /* 禁用双击缩放 */
+    touch-action    : manipulation;
+    font-size       : 15px;
+    font-weight     : var(--fw-400);
+    font-family     : var(--ff);
+    line-height     : 1.3;
+    background-color: var(--clr-primary-500);
+    color           : var(--clr-primary-400);
+    margin          : 0;
+    padding         : 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+}
+
+input,
+textarea {
+    font-size: 16px;
+}
