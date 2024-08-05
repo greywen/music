@@ -11,19 +11,56 @@ datasource db {
 }
 
 model Music {
-    id        Int       @id @default(autoincrement())
-    mid       String    @unique
-    name      String    @db.VarChar(50)
-    artist    String    @db.VarChar(255)
-    album     String    @db.VarChar(50)
-    url       String    @db.VarChar(255)
-    lyric     String    @db.Text
-    cover     String    @db.Text
-    br        Int       @db.SmallInt
-    size      Int       @db.Integer
-    source    String    @db.VarChar(20)
-    createdAt DateTime  @default(now())
-    favorite  Favorite?
+    id          Int           @id @default(autoincrement())
+    mid         String        @db.VarChar(50)
+    sourceId    Int
+    url         String        @db.VarChar(255)
+    name        String        @db.VarChar(50)
+    albumId     Int
+    lyricId     Int
+    br          Int           @db.SmallInt
+    size        Int           @db.Integer
+    createdAt   DateTime      @default(now())
+    Favorite    Favorite?
+    MusicArtist MusicArtist[]
+    Album       Album         @relation(fields: [albumId], references: [id])
+    Lyric       Lyric         @relation(fields: [lyricId], references: [id])
+
+    @@unique([mid, sourceId])
+}
+
+model Lyric {
+    id    Int     @id @default(autoincrement())
+    text  String  @db.Text
+    Music Music[]
+}
+
+model MusicArtist {
+    id       Int    @id @default(autoincrement())
+    musicId  Int
+    singerId Int
+    Music    Music  @relation(fields: [musicId], references: [id])
+    Singer   Singer @relation(fields: [singerId], references: [id])
+    
+    @@unique([musicId, singerId])
+}
+
+model Singer {
+    id          Int           @id @default(autoincrement())
+    name        String        @unique @db.VarChar(50)
+    MusicArtist MusicArtist[]
+    Album       Album[]
+}
+
+model Album {
+    id       Int     @id @default(autoincrement())
+    singerId Int
+    name     String  @db.VarChar(50)
+    cover    String  @db.Text
+    Singer   Singer  @relation(fields: [singerId], references: [id])
+    Music    Music[]
+
+    @@unique([singerId, name])
 }
 
 model Favorite {

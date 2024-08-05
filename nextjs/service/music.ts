@@ -19,7 +19,7 @@ interface IGetMusicListResult {
 }
 
 export async function getMusicList(params: IGetMusicListParams) {
-  const { name, source = Source.tencent, pages = 1, count = 20 } = params;
+  const { name, source = 'tencent', pages = 1, count = 20 } = params;
   const fetchService = useFetch();
   return await fetchService.get<IGetMusicListResult>(
     `https://music-api.gdstudio.xyz/api.php?types=search&source=${source}&name=${name}&count=${count}&pages=${pages}`
@@ -55,7 +55,7 @@ function formatMusicResult(inputString: string): IGetMusicInfoResult {
 }
 
 export async function getMusicInfo(params: IGetMusicInfoParams) {
-  const { id, source = Source.tencent, br = 320 } = params;
+  const { id, source = 'tencent', br = 320 } = params;
   const fetchService = useFetch();
   const url = `https://music-api-cn.gdstudio.xyz:22443/api.php?callback=jQuery&types=url&source=${source}&id=${id}&br=${br}`;
   const dataString = await fetchService.get<string>(url, {
@@ -77,7 +77,7 @@ interface IGetCoverImgResult {
 }
 
 export async function getCover(params: IGetCoverImgParams) {
-  const { id, source = Source.tencent, size = 300 } = params;
+  const { id, source = 'tencent', size = 300 } = params;
   const fetchService = useFetch();
   return await fetchService.get<IGetCoverImgResult>(
     `https://music-api.gdstudio.xyz/api.php?types=pic&source=${source}&id=${id}&size=${size}`
@@ -95,7 +95,7 @@ interface IGetLyricResult {
 }
 
 export async function getLyric(params: IGetLyricParams) {
-  const { id, source = Source.tencent } = params;
+  const { id, source = 'tencent' } = params;
   const fetchService = useFetch();
   return await fetchService.get<IGetLyricResult>(
     `https://music-api.gdstudio.xyz/api.php?types=lyric&source=${source}&id=${id}`
