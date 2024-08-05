@@ -5,8 +5,6 @@
   "scripts": {
     "prisma": "npx prisma generate",
     "dev": "next dev",
-    "build:dev": "set NODE_ENV=development && npx prisma generate && next build",
-    "start:dev": "set NODE_ENV=development && npx prisma generate && next start",
     "build": "npx prisma generate && next build",
     "start": "npx prisma generate && next start",
     "lint": "next lint"
@@ -17,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "^5.17.0",
     "next": "14.2.5",
+    "next-pwa": "^5.6.0",
     "react": "^18",
     "react-dom": "^18",
     "react-use-audio-player": "^2.2.0"

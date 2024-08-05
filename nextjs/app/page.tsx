@@ -6,6 +6,7 @@ import PlayListAction from '@/components/PlayList/PalyAction';
 import PlayList from '@/components/PlayList/PlayList';
 import { createContext, Dispatch } from 'react';
 import { ActionType, useCreateReducer } from '@/hooks/useCreateReducer';
+import PlayBar from '@/components/PlayBar';
 
 interface InitialState {
   searchLoading: boolean;
@@ -132,6 +133,7 @@ export default function Home() {
       <Context.Provider
         value={{ ...contextValue, handlePlay, handlePlayAll, handlePause }}
       >
+        <PlayBar />
         <SearchBar onSearch={handleSearch} />
         <PlayListAction />
         <PlayList>

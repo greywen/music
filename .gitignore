@@ -15,3 +15,9 @@
 
 #data
 /nextjs/data
+
+#pwa
+/nextjs/public/sw*.js
+/nextjs/public/sw*.js.map
+/nextjs/public/workbox*.js
+/nextjs/public/workbox*.js.map
