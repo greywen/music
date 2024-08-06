@@ -1,9 +1,19 @@
 /* pages/search/search.wxss */
 
-.footer {
+.loading-container {
+  --td-loading-color: gray;
   padding: 32rpx 0rpx 48rpx 0rpx;
   font-size: small;
   display: flex;
   justify-content: center;
   color: gray;
+}
+
+.action-container {
+  padding: 12rpx 0rpx;
+  text-align: end;
+}
+
+.play-all-btn {
+  width: 120px !important;
 }
