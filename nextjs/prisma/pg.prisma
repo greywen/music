@@ -16,15 +16,15 @@ model Music {
     sourceId    Int
     url         String        @db.VarChar(255)
     name        String        @db.VarChar(50)
-    albumId     Int
-    lyricId     Int
+    albumId     Int?
+    lyricId     Int?
     br          Int           @db.SmallInt
     size        Int           @db.Integer
     createdAt   DateTime      @default(now())
     Favorite    Favorite?
     MusicArtist MusicArtist[]
-    Album       Album         @relation(fields: [albumId], references: [id])
-    Lyric       Lyric         @relation(fields: [lyricId], references: [id])
+    Album       Album?        @relation(fields: [albumId], references: [id])
+    Lyric       Lyric?        @relation(fields: [lyricId], references: [id])
 
     @@unique([mid, sourceId])
 }
@@ -41,7 +41,7 @@ model MusicArtist {
     singerId Int
     Music    Music  @relation(fields: [musicId], references: [id])
     Singer   Singer @relation(fields: [singerId], references: [id])
-    
+
     @@unique([musicId, singerId])
 }
 
@@ -56,11 +56,18 @@ model Album {
     id       Int     @id @default(autoincrement())
     singerId Int
     name     String  @db.VarChar(50)
-    cover    String  @db.Text
+    coverId  Int?
     Singer   Singer  @relation(fields: [singerId], references: [id])
+    Cover    Cover?  @relation(fields: [coverId], references: [id])
     Music    Music[]
 
     @@unique([singerId, name])
+}
+
+model Cover {
+    id    Int     @id @default(autoincrement())
+    url   String  @db.Text
+    Album Album[]
 }
 
 model Favorite {

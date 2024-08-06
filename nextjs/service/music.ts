@@ -21,7 +21,7 @@ interface IGetMusicListResult {
 export async function getMusicList(params: IGetMusicListParams) {
   const { name, source = 'tencent', pages = 1, count = 20 } = params;
   const fetchService = useFetch();
-  return await fetchService.get<IGetMusicListResult>(
+  return await fetchService.get<IGetMusicListResult[]>(
     `https://music-api.gdstudio.xyz/api.php?types=search&source=${source}&name=${name}&count=${count}&pages=${pages}`
   );
 }
