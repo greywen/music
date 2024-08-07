@@ -3,7 +3,6 @@ import prisma from '@/prisma/prisma';
 import { getCover, getLyric, getMusicInfo } from '@/service/music';
 import createFolder from '@/utils/createFolder';
 import { downloadFile, getUrlExtension } from '@/utils/downloadFile';
-import imageToBase64 from '@/utils/imageToBase64';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
@@ -44,15 +43,16 @@ async function downloadMusic(music: IMusic) {
   await createFolder(musicSavePath);
   const musicInfo = await getMusicInfo({ id, source, br: 320 });
   console.log('music url: \n', musicInfo.url);
-  const musicPath = `${musicSavePath}/${artist.join()} - ${name}${getUrlExtension(
+  const musicName = `${artist.join()} - ${name}${getUrlExtension(
     musicInfo.url
   )}`;
+  const musicPath = `${musicSavePath}/${musicName}`;
   await downloadFile({
     url: musicInfo.url,
     filePath: musicPath,
   });
   console.timeEnd('download music');
-  return { musicInfo, musicPath };
+  return { musicInfo, musicName };
 }
 
 async function downloadCover(music: IMusic) {
@@ -63,18 +63,14 @@ async function downloadCover(music: IMusic) {
   const cover = await getCover({ id: pic_id, source, size: 500 });
   console.log('cover url: \n', cover?.url);
   if (!cover?.url) return undefined;
-  const coverPath = `${coverSavePath}/${id}${getUrlExtension(cover.url)}`;
+  const coverName = `${id}${getUrlExtension(cover.url)}`;
+  const coverPath = `${coverSavePath}/${coverName}`;
   await downloadFile({
     url: cover.url,
     filePath: coverPath,
   });
   console.timeEnd('download cover');
-
-  console.time('convert cover');
-  const coverBase64 = await imageToBase64(coverPath);
-  console.timeEnd('convert cover');
-
-  return coverBase64;
+  return coverName;
 }
 
 async function findMusicIds(ids: string[]) {
@@ -193,8 +189,8 @@ export default async function download(musicList: IMusic[]) {
   for (const music of musicList) {
     const { id, source, name, lyric_id, artist, album } = music;
     console.log(`${artist.join()} - ${name}`);
-    const { musicInfo, musicPath } = await downloadMusic(music);
-    const coverBase64 = album ? await downloadCover(music) : undefined;
+    const { musicInfo, musicName } = await downloadMusic(music);
+    const coverUrl = album ? await downloadCover(music) : undefined;
     const lyric = await getLyric({ id: lyric_id, source });
     await transfer({
       mid: id,
@@ -202,9 +198,9 @@ export default async function download(musicList: IMusic[]) {
       name,
       albumName: album,
       artist,
-      url: musicPath,
+      url: musicName,
       lyricText: lyric?.lyric,
-      coverUrl: coverBase64,
+      coverUrl,
       br: musicInfo.br,
       size: musicInfo.size,
     });

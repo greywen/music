@@ -3,14 +3,18 @@ import downloadMusic from '@/utils/downloadMusic';
 
 export async function POST(request: Request) {
   const {
-    name,
+    query,
     count = 20,
     source = 'tencent',
   } = (await request.json()) as {
-    name: string;
+    query: string;
     source: Source;
     count: number;
   };
-  const musicList = await getMusicList({ name, count, source });
+  
+  if (!query) {
+    throw new Error('query is required');
+  }
+  const musicList = await getMusicList({ name: query, count, source });
   return Response.json(await downloadMusic(musicList));
 }
