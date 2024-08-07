@@ -4,17 +4,19 @@ import styles from './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayListAction from '@/components/PlayList/PalyAction';
 import PlayList from '@/components/PlayList/PlayList';
-import { createContext, Dispatch } from 'react';
+import { createContext, Dispatch, useEffect, useState } from 'react';
 import { ActionType, useCreateReducer } from '@/hooks/useCreateReducer';
 import PlayBar from '@/components/PlayBar';
+import { Howl, Howler } from 'howler';
+import { search } from '@/apis/musicApi';
 
 interface InitialState {
   searchLoading: boolean;
   playLoading: boolean;
-  searchList: IMusic[];
-  palyList: IMusic[];
-  currentMusic: IMusic | undefined;
-  nextMusic: IMusic[];
+  searchList: IMusicSearchResult[];
+  palyList: IMusicSearchResult[];
+  currentMusic: IMusicSearchResult;
+  nextMusicList: IMusicSearchResult[];
 }
 
 const initialState: InitialState = {
@@ -22,16 +24,13 @@ const initialState: InitialState = {
   playLoading: false,
   searchList: [],
   palyList: [],
-  currentMusic: undefined,
-  nextMusic: [],
+  currentMusic: {} as IMusicSearchResult,
+  nextMusicList: [],
 };
 
 interface ContextProps {
   state: InitialState;
   dispatch: Dispatch<ActionType<InitialState>>;
-  handlePlay: (musicId: string) => void;
-  handlePlayAll: (musicIds: string[]) => void;
-  handlePause: () => void;
 }
 
 const Context = createContext<ContextProps>(undefined!);
@@ -40,108 +39,87 @@ export default function Home() {
   const contextValue = useCreateReducer<InitialState>({
     initialState,
   });
+  const [searchPaging, setSearchPaging] = useState<IPaging>({
+    pages: 1,
+    count: 20,
+  });
+  const {
+    state: {
+      currentMusic,
+      playLoading,
+      nextMusicList,
+      searchLoading,
+      searchList,
+    },
+    dispatch,
+  } = contextValue;
 
-  const { state, dispatch } = contextValue;
+  useEffect(() => {
+    if (playLoading) {
+      let sound = new Howl({
+        src: '',
+        html5: true,
+        autoplay: true,
+        volume: 0.5,
+      });
 
-  function handleSearch(value: string) {}
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', function () {
+          sound.play();
+        });
+        navigator.mediaSession.setActionHandler('pause', function () {
+          sound.pause();
+        });
+      }
 
-  function handlePlay(musicId: string) {}
-  function handlePlayAll(musicIds: string[]) {}
+      sound.once('load', () => {
+        sound.play();
+      });
+
+      sound.on('end', () => {
+        const index = nextMusicList.findIndex((x) => x.id === currentMusic?.id);
+        if (index > 0 && index < nextMusicList.length) {
+          dispatch({ field: 'currentMusic', value: nextMusicList[index] });
+        } else {
+          sound.pause();
+        }
+      });
+    }
+  }, [currentMusic, playLoading]);
+
+  async function handleSearch(value: string) {
+    dispatch({ field: 'searchLoading', value: true });
+    const data = await search({ ...searchPaging, query: value });
+    dispatch({ field: 'searchList', value: data });
+    dispatch({ field: 'searchLoading', value: false });
+  }
+
+  function handlePlay(musicId: number) {}
+  function handlePlayAll() {
+    dispatch({ field: 'playLoading', value: true });
+    dispatch({ field: 'palyList', value: searchList });
+    dispatch({ field: 'nextMusicList', value: searchList });
+    dispatch({ field: 'currentMusic', value: searchList[0] });
+    dispatch({ field: 'playLoading', value: false });
+  }
   function handlePause() {}
-
-  const data = [
-    {
-      name: '晴天',
-      artist: '周杰伦',
-    },
-    {
-      name: '搁浅',
-      artist: '周杰伦',
-    },
-    {
-      name: '一路向北',
-      artist: '周杰伦',
-    },
-    {
-      name: '兰亭序',
-      artist: '周杰伦',
-    },
-    {
-      name: '稻香',
-      artist: '周杰伦',
-    },
-    {
-      name: '枫',
-      artist: '周杰伦',
-    },
-    {
-      name: '夜曲',
-      artist: '周杰伦',
-    },
-    {
-      name: '七里香',
-      artist: '周杰伦',
-    },
-    {
-      name: '青花瓷',
-      artist: '周杰伦',
-    },
-    {
-      name: '反方向的钟',
-      artist: '周杰伦',
-    },
-    {
-      name: '告白气球',
-      artist: '周杰伦',
-    },
-    {
-      name: '花海',
-      artist: '周杰伦',
-    },
-    {
-      name: '红尘客栈',
-      artist: '周杰伦',
-    },
-    {
-      name: '我落泪情绪零碎',
-      artist: '周杰伦',
-    },
-    {
-      name: '蒲公英的约定',
-      artist: '周杰伦',
-    },
-    {
-      name: '退后',
-      artist: '周杰伦',
-    },
-    {
-      name: '我是如此相信',
-      artist: '周杰伦',
-    },
-    {
-      name: '半岛铁盒',
-      artist: '周杰伦',
-    },
-    {
-      name: '爱在西元前',
-      artist: '周杰伦',
-    },
-  ];
 
   return (
     <main className={styles.container}>
-      <Context.Provider
-        value={{ ...contextValue, handlePlay, handlePlayAll, handlePause }}
-      >
-        <PlayBar />
-        <SearchBar onSearch={handleSearch} />
-        <PlayListAction />
+      <Context.Provider value={{ ...contextValue }}>
+        <PlayBar
+          title={currentMusic.name}
+          description={`${currentMusic.artist} - ${currentMusic.name}`}
+        />
+        <SearchBar searching={searchLoading} onSearch={handleSearch} />
+        {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />}
         <PlayList>
-          {data.map((x) => (
+          {searchList.map((x) => (
             <PlayListItem
-              key={x.name}
+              key={x.id}
               title={x.name}
               description={`${x.artist} - ${x.name}`}
+              onClickLeft={() => handlePlay(x.id)}
             />
           ))}
         </PlayList>

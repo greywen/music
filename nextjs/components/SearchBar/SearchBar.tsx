@@ -4,11 +4,12 @@ import './index.css';
 import SearchIcon from '../Icons/SearchIcon';
 
 type Props = {
+  searching?: boolean;
   onSearch: (value: string) => void;
 };
 
 const SearchBar = (props: Props) => {
-  const { onSearch } = props;
+  const { searching, onSearch } = props;
   const [value, setValue] = useState('');
 
   function handleClear() {
@@ -16,7 +17,7 @@ const SearchBar = (props: Props) => {
   }
 
   function handleSearch(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !searching) {
       onSearch(value);
     }
   }

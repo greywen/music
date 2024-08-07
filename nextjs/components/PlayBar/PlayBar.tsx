@@ -1,14 +1,21 @@
 'use client';
-import { useState } from 'react';
 import './index.css';
 import Image from 'next/image';
 import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
 
-type Props = {};
+type Props = {
+  title: string;
+  description: string;
+  playing?: boolean;
+  onPlay?: () => void;
+  onPause?: () => void;
+  onNext?: () => void;
+};
 
 const PlayBar = (props: Props) => {
+  const { title, description, playing, onPlay, onPause, onNext } = props;
   return (
     <div className='play-bar-warp'>
       <div className='play-bar'>
@@ -22,15 +29,21 @@ const PlayBar = (props: Props) => {
             />
           </div>
           <div>
-            <div className='play-bar-title'>青花瓷</div>
-            <div className='play-bar-description'>周杰伦 - 青花瓷</div>
+            <div className='play-bar-title'>{title}</div>
+            <div className='play-bar-description'>{description}</div>
           </div>
         </div>
         <div className='play-bar-right'>
-          <span>
-            <PlayIcon />
-          </span>
-          <span>
+          {playing ? (
+            <span onClick={onPause && onPause}>
+              <PauseIcon />
+            </span>
+          ) : (
+            <span onClick={onPlay && onPlay}>
+              <PlayIcon />
+            </span>
+          )}
+          <span onClick={onNext && onNext}>
             <NextIcon />
           </span>
         </div>
