@@ -1,5 +1,7 @@
 // index.ts
-const bgAudioManager = wx.getBackgroundAudioManager();
+
+import { bgAudioManager } from "../../utils/bgAudioManager";
+
 Component({
   data: {
 
