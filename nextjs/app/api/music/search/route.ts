@@ -6,6 +6,7 @@ interface ISearchResult {
   name: string;
   artist: string;
   album: string;
+  coverId: number;
 }
 
 const search = async (query: string, limit: number, offset: number) => {
@@ -24,16 +25,17 @@ WITH AllArtists AS (
 	."id",
 	M."name" AS "name",
 	AA.artist,
-	AL."name" AS album 
+	AL."name" AS album,
+	AL."coverId" as "coverId"
 FROM
 	"Music" M 
 	LEFT JOIN AllArtists AA ON M."id" = AA."musicId"
-	LEFT JOIN "Album" AL ON M."albumId" = AL."id" 
+	LEFT JOIN "Album" AL ON M."albumId" = AL."id"
 WHERE
 	M."name" LIKE ${Prisma.join([`%${query}%`])}
 	OR AA.artist LIKE ${Prisma.join([`%${query}%`])}
 	OR AL."name" LIKE ${Prisma.join([`%${query}%`])} 
-GROUP BY M."id", M.url, M."name", AA.artist, AL."name" 
+GROUP BY M."id", M.url, M."name", AA.artist, AL."name", AL."coverId"  
 ORDER BY M."id", MAX ( M."createdAt" ) DESC 
 LIMIT ${Prisma.join([limit])} OFFSET ${Prisma.join([offset])};`
   );

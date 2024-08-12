@@ -6,6 +6,7 @@ interface ISearchResult {
   name: string;
   singer: string;
   album: string;
+  coverId: number;
 }
 
 const search = async (query: string, limit: number, offset: number) => {
@@ -15,7 +16,8 @@ const search = async (query: string, limit: number, offset: number) => {
       	( M."id" ) M."id",
       	M."name" AS "name",
       	S."name" AS singer,
-      	AL."name" AS album 
+      	AL."name" AS album,
+        AL."coverId" AS "coverId" 
       FROM
       	"Music" M 
         LEFT JOIN "MusicArtist" MA ON M.ID = MA."musicId"

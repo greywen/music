@@ -8,6 +8,7 @@ import NextIcon from '../Icons/NextIcon';
 type Props = {
   title: string;
   description: string;
+  coverId: number;
   playing?: boolean;
   onPlay?: () => void;
   onPause?: () => void;
@@ -15,7 +16,8 @@ type Props = {
 };
 
 const PlayBar = (props: Props) => {
-  const { title, description, playing, onPlay, onPause, onNext } = props;
+  const { title, description, coverId, playing, onPlay, onPause, onNext } =
+    props;
   return (
     <div className='play-bar-warp'>
       <div className='play-bar'>
@@ -23,7 +25,7 @@ const PlayBar = (props: Props) => {
           <div>
             <Image
               alt=''
-              src='https://y.gtimg.cn/music/photo_new/T002R300x300M000003piLsO07y5KR_2.jpg'
+              src={'http://127.0.0.1:3000/files/cover?id=' + coverId}
               width={40}
               height={40}
             />

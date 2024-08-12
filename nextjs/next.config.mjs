@@ -1,6 +1,7 @@
 import nextPWA from 'next-pwa';
 
 const isDev = process.env?.NODE_ENV === 'development';
+const url = new URL(process.env?.API_URL);
 
 const withPWA = nextPWA({
     dest: 'public',
@@ -11,7 +12,7 @@ const withPWA = nextPWA({
 
 const nextConfig = {
     images: {
-        domains: ['y.gtimg.cn'],
+        domains: [url.hostname],
     },
 };
 

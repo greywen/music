@@ -145,6 +145,7 @@ export default function Home() {
           onPause={handlePause}
           onPlay={handlePlay}
           playing={playing}
+          coverId={currentMusic.coverId}
           title={currentMusic.name}
           description={`${currentMusic.artist} - ${currentMusic.name}`}
         />
