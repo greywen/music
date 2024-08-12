@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon",
-    "build": "px prisma generate && next build && tsc --project tsconfig.server.json",
+    "build": "npx prisma generate && next build && tsc --project tsconfig.server.json",
     "start": "npx prisma generate && cross-env NODE_ENV=production node dist/server.js",
     "prisma": "npx prisma generate",
     "lint": "next lint"
