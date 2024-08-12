@@ -4,28 +4,11 @@ import styles from './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayListAction from '@/components/PlayList/PalyAction';
 import PlayList from '@/components/PlayList/PlayList';
-import { createContext, Dispatch, useEffect, useState } from 'react';
-import { ActionType, useCreateReducer } from '@/hooks/useCreateReducer';
+import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { search } from '@/apis/musicApi';
 import { isEmpty } from '@/utils/common';
-
-interface InitialState {
-  searchLoading: boolean;
-  playLoading: boolean;
-  searchList: IMusicSearchResult[];
-  playList: IMusicSearchResult[];
-  currentMusic: IMusicSearchResult;
-}
-
-const initialState: InitialState = {
-  searchLoading: false,
-  playLoading: false,
-  searchList: [],
-  playList: [],
-  currentMusic: {} as IMusicSearchResult,
-};
 
 let howler: Howl;
 export default function Home() {
@@ -40,12 +23,31 @@ export default function Home() {
   );
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [playLoading, setPlayLoading] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(false);
+
+  function setMetadata() {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentMusic.name,
+        artist: currentMusic.artist,
+        album: currentMusic.album,
+        artwork: [
+          {
+            src: 'files/cover?id=' + currentMusic.id,
+            sizes: '500x500',
+            type: 'image/png',
+          },
+        ],
+      });
+    }
+  }
 
   function nextMusic() {
     const index = playList.findIndex((x) => x.id === currentMusic.id);
-    if (index > 0 && index < playList.length) {
+    if (index >= 0 && index < playList.length) {
       setCurrentMusic(playList[index + 1]);
     } else {
+      setCurrentMusic({} as IMusicSearchResult);
       howler.pause();
     }
   }
@@ -60,12 +62,11 @@ export default function Home() {
 
   useEffect(() => {
     if (!isEmpty(currentMusic)) {
+      howler?.unload();
       howler = new Howl({
         src: 'files/music?id=' + currentMusic.id,
         format: ['mp3'],
         html5: true,
-        autoplay: true,
-        volume: 0.5,
       });
 
       if ('mediaSession' in navigator) {
@@ -84,10 +85,13 @@ export default function Home() {
       }
 
       howler.on('load', () => {
+        setMetadata();
         howler.play();
+        setPlaying(true);
       });
 
       howler.on('end', () => {
+        setPlaying(false);
         nextMusic();
       });
     }
@@ -100,7 +104,19 @@ export default function Home() {
     setSearchLoading(false);
   }
 
-  function handlePlay(musicId: number) {}
+  function handlePlaySingle(musicId: number) {
+    let music = playList.find((x) => x.id === musicId);
+    if (music) {
+      setCurrentMusic(music);
+    } else {
+      music = searchList.find((x) => x.id === musicId);
+      if (music) {
+        setPlayList([music]);
+        setCurrentMusic(music);
+      }
+    }
+  }
+
   function handlePlayAll() {
     setPlayLoading(true);
     setPlayList(searchList);
@@ -110,13 +126,25 @@ export default function Home() {
   function handleNext() {
     nextMusic();
   }
-  function handlePause() {}
+
+  function handlePause() {
+    setPlaying(false);
+    howler.pause();
+  }
+
+  function handlePlay() {
+    setPlaying(true);
+    howler.play();
+  }
 
   return (
     <main className={styles.container}>
       {!isEmpty(currentMusic) && (
         <PlayBar
           onNext={handleNext}
+          onPause={handlePause}
+          onPlay={handlePlay}
+          playing={playing}
           title={currentMusic.name}
           description={`${currentMusic.artist} - ${currentMusic.name}`}
         />
@@ -129,7 +157,7 @@ export default function Home() {
             key={x.id}
             title={x.name}
             description={`${x.artist} - ${x.name}`}
-            onClickLeft={() => handlePlay(x.id)}
+            onClickLeft={() => handlePlaySingle(x.id)}
           />
         ))}
       </PlayList>

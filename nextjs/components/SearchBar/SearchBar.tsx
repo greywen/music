@@ -10,7 +10,7 @@ type Props = {
 
 const SearchBar = (props: Props) => {
   const { searching, onSearch } = props;
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('周杰伦');
 
   function handleClear() {
     setValue('');
