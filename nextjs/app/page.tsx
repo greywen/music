@@ -33,7 +33,7 @@ export default function Home() {
         album: currentMusic.album,
         artwork: [
           {
-            src: 'files/cover?id=' + currentMusic.id,
+            src: '/files/cover?id=' + currentMusic.coverId,
             sizes: '500x500',
             type: 'image/png',
           },
