@@ -2,15 +2,20 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
+        "moduleResolution": "node",
         "outDir": "dist",
         "lib": [
-            "es2019"
+            "es2015",
+            "dom",
+            "dom.iterable",
+            "esnext"
         ],
-        "target": "es2019",
+        "target": "esnext",
         "isolatedModules": false,
         "noEmit": false
     },
     "include": [
-        "server.ts"
+        "server.ts",
+        "routes/**/*.ts"
     ]
 }

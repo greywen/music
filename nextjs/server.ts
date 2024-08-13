@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 import next from 'next';
 import express from 'express';
-import fileRoutes from './routes/fileRoutes';
+import fileRoutes from './routes';
 import cron from 'node-cron';
 
 const port = parseInt(process.env.PORT || '3000', 10);

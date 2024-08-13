@@ -9,6 +9,7 @@
 /nextjs/build
 /nextjs/.env
 /nextjs/next-env.d.ts
+/nextjs/dist
 
 #prisma
 /nextjs/prisma/migrations
