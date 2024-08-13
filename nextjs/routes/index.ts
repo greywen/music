@@ -1,2 +1,2 @@
-import router from './fileRoutes';
-export default router;
+import fileRoutes from './fileRoutes';
+export { fileRoutes };

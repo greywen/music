@@ -75,3 +75,16 @@ model Favorite {
     music   Music @relation(fields: [musicId], references: [id])
     musicId Int   @unique
 }
+
+model Job {
+    id     Int       @id @default(autoincrement())
+    params String    @db.VarChar(1024)
+    status JobStatus @default(Pending)
+}
+
+enum JobStatus {
+    Pending
+    Running
+    Failed
+    Done
+}
