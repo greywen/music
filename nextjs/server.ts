@@ -16,7 +16,7 @@ app.prepare().then(() => {
   // task.start();
   const server = express();
   server.use('/files', fileRoutes);
-  server.get('*', (req, res) => {
+  server.all('*', (req, res) => {
     return handle(req, res);
   });
   createServer(server).listen(port);
