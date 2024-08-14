@@ -1,4 +1,5 @@
 import { useFetch } from "@/hooks/useFetch";
+import { IMusicSearchParams, IMusicSearchResult } from "@/interfaces/search";
 
 export const search = (params: IMusicSearchParams) => {
   const { query, count, pages } = params;

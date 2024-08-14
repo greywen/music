@@ -1,3 +1,4 @@
+import { CoverImgSize, MusicBr, Source } from '@/interfaces/music';
 import { fetchJson } from '@/utils/request';
 
 interface IGetMusicListParams {

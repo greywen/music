@@ -9,6 +9,8 @@ import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { search } from '@/apis/musicApi';
 import { isEmpty } from '@/utils/common';
+import { IPaging } from '@/interfaces/page';
+import { IMusicSearchResult } from '@/interfaces/search';
 
 let howler: Howl;
 export default function Home() {

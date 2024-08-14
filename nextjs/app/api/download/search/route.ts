@@ -1,3 +1,4 @@
+import { Source } from '@/interfaces/music';
 import { getMusicList } from '@/service/music';
 import downloadMusic from '@/utils/downloadMusic';
 

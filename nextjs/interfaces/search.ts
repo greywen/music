@@ -1,15 +1,10 @@
-interface IPaging {
-  count: number;
-  pages: number;
-}
-
-interface IMusicSearchParams {
+export interface IMusicSearchParams {
   query: string;
   count: number;
   pages: number;
 }
 
-interface IMusicSearchResult {
+export interface IMusicSearchResult {
   id: number;
   name: string;
   artist: string;

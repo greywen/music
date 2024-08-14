@@ -1,3 +1,4 @@
+import { IMusic } from '@/interfaces/music';
 import downloadMusic from '@/utils/downloadMusic';
 
 export async function POST(request: Request) {
