@@ -19,12 +19,13 @@ interface IGetMusicListResult {
   source: Source;
 }
 
-const MUSIC_API_URL = process.env.MUSIC_API_URL;
+const SEARCH_MUSIC_API_URL = process.env.SEARCH_MUSIC_API_URL;
+const DOWNLOAD_MUSIC_API_URL = process.env.DOWNLOAD_MUSIC_API_URL;
 
 export async function getMusicList(params: IGetMusicListParams) {
   const { name, source = 'tencent', pages = 1, count = 20 } = params;
   const musics = await fetchJson<IGetMusicListResult[]>(
-    `${MUSIC_API_URL}/api.php?types=search&source=${source}&name=${name}&count=${count}&pages=${pages}`
+    `${SEARCH_MUSIC_API_URL}/api.php?types=search&source=${source}&name=${name}&count=${count}&pages=${pages}`
   );
   return musics.map((x) => {
     x.id = `${x.id}`;
@@ -62,7 +63,7 @@ function formatMusicResult(inputString: string): IGetMusicInfoResult {
 
 export async function getMusicInfo(params: IGetMusicInfoParams) {
   const { id, source = 'tencent', br = 320 } = params;
-  const url = `${MUSIC_API_URL}/api.php?callback=jQuery&types=url&source=${source}&id=${id}&br=${br}`;
+  const url = `${DOWNLOAD_MUSIC_API_URL}/api.php?callback=jQuery&types=url&source=${source}&id=${id}&br=${br}`;
   console.log('getMusicInfo', url);
   const response = await fetch(url);
   const dataString = await response.text();
@@ -83,7 +84,7 @@ interface IGetCoverImgResult {
 export async function getCover(params: IGetCoverImgParams) {
   const { id, source = 'tencent', size = 300 } = params;
   return await fetchJson<IGetCoverImgResult>(
-    `${MUSIC_API_URL}/api.php?types=pic&source=${source}&id=${id}&size=${size}`
+    `${SEARCH_MUSIC_API_URL}/api.php?types=pic&source=${source}&id=${id}&size=${size}`
   );
 }
 
@@ -100,6 +101,6 @@ interface IGetLyricResult {
 export async function getLyric(params: IGetLyricParams) {
   const { id, source = 'tencent' } = params;
   return await fetchJson<IGetLyricResult>(
-    `${MUSIC_API_URL}/api.php?types=lyric&source=${source}&id=${id}`
+    `${SEARCH_MUSIC_API_URL}/api.php?types=lyric&source=${source}&id=${id}`
   );
 }
