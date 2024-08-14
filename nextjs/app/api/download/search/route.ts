@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     source: Source;
     count: number;
   };
-  
+
   if (!query) {
     throw new Error('query is required');
   }

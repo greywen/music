@@ -12,9 +12,10 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const task = cron.schedule('* * * * *', () => {
+    console.log('download job start');
     // downloadJob();
   });
-  // task.start();
+  task.start();
   const server = express();
   server.use('/files', fileRoutes);
   server.all('*', (req, res) => {
