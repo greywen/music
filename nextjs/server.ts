@@ -13,7 +13,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const task = cron.schedule('* * * * *', () => {
     console.log('download job start', new Date());
-    // downloadJob();
+    downloadJob();
   });
   task.start();
   const server = express();

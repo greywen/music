@@ -1,6 +1,6 @@
-import { getMusicList } from '@/service/music';
+import { getMusicList } from '../service/music';
 import prisma from '../prisma/prisma';
-import downloadMusic from '@/utils/downloadMusic';
+import downloadMusic from '../utils/downloadMusic';
 
 export default async function downloadJob() {
   const runningJob = await prisma.job.findFirst({
@@ -15,7 +15,6 @@ export default async function downloadJob() {
     where: { status: 'Pending' },
   });
   if (!pendingJob) {
-    console.log(`no download job running`);
     return;
   }
 
@@ -25,7 +24,13 @@ export default async function downloadJob() {
   });
 
   try {
-    const musicList = await getMusicList(JSON.parse(pendingJob.params));
+    const params = JSON.parse(pendingJob.params);
+    let musicList = [];
+    if (Array.isArray(params)) {
+      musicList = params;
+    } else {
+      musicList = await getMusicList(params);
+    }
     await downloadMusic(musicList);
     await prisma.job.update({
       where: { id: pendingJob.id },
