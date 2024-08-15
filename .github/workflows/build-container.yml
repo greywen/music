@@ -24,10 +24,10 @@ jobs:
 
       - name: Tag container with 'latest' & run number
         run: |
-          docker tag music ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:r-${{ github.run_number }}
+          docker tag music ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:${{ github.run_number }}
           docker tag music ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:latest
 
       - name: Push container
         run: |
-          docker push ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:r-${{ github.run_number }}
+          docker push ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:${{ github.run_number }}
           docker push ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music:latest
