@@ -46,11 +46,11 @@ export default function Home() {
 
   function nextMusic() {
     const index = playList.findIndex((x) => x.id === currentMusic.id);
-    if (index >= 0 && index < playList.length) {
+    const playListCount = playList.length;
+    if (index >= 0 && index < playListCount - 1) {
       setCurrentMusic(playList[index + 1]);
     } else {
-      setCurrentMusic({} as IMusicSearchResult);
-      howler.pause();
+      handlePause();
     }
   }
 
@@ -59,6 +59,7 @@ export default function Home() {
     if (index != 0) {
       setCurrentMusic(playList[index - 1]);
     } else {
+      handlePause();
     }
   }
 
@@ -88,8 +89,7 @@ export default function Home() {
 
       howler.on('load', () => {
         setMetadata();
-        howler.play();
-        setPlaying(true);
+        handlePlay();
       });
 
       howler.on('end', () => {
@@ -120,7 +120,6 @@ export default function Home() {
   }
 
   function handlePlayAll() {
-    setPlayLoading(true);
     setPlayList(searchList);
     setCurrentMusic(searchList[0]);
   }
