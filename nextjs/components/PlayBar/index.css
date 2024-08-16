@@ -1,26 +1,32 @@
 .play-bar-warp {
-    position  : fixed;
-    z-index   : 99;
-    bottom    : 0;
-    right     : 0;
-    left      : 0;
-    background: #FFF;
-    max-width : 768px;
-    margin    : 0 auto;
+    padding  : 0 .8125rem;
+    position : fixed;
+    z-index  : 99;
+    bottom   : 12px;
+    right    : 0;
+    left     : 0;
+    max-width: 768px;
+    margin   : 0 auto;
 }
 
 .play-bar {
-    padding    : 0 .8125rem;
-    height     : 50px;
-    display    : flex;
-    align-items: center;
+    padding      : 0 .8125rem;
+    border-radius: 12px;
+    background   : #FFF;
+    height       : 50px;
+    display      : flex;
+    align-items  : center;
 }
 
 .play-bar-left {
     display    : flex;
     align-items: center;
     gap        : .45rem;
-    width      : 75%;
+    width      : 75%
+}
+
+.play-bar-left img {
+    border-radius: 6px;
 }
 
 
@@ -49,14 +55,22 @@
 
 .play-bar-title {
     font         : 400 16px var(--ff);
+    width        : 180px;
     white-space  : nowrap;
     text-overflow: ellipsis;
+    overflow     : hidden;
 }
 
 .play-bar-description {
     display      : block;
+    width        : 180px;
     white-space  : nowrap;
     text-overflow: ellipsis;
+    overflow     : hidden;
     font         : 300 13px/1.5 var(--ff);
     color        : #777;
+}
+
+.none-events {
+    pointer-events: none;
 }

@@ -35,7 +35,7 @@ const SearchBar = (props: Props) => {
           }}
           onKeyDown={handleSearch}
         />
-        <SearchIcon viewBox='0 0 24 24' className='search-icon' />
+        <SearchIcon svg={{ viewBox: '0 0 24 24', className: 'search-icon' }} />
         <span
           hidden={!value}
           className='search-clear-btn'

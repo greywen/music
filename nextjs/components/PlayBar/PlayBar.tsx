@@ -4,11 +4,9 @@ import Image from 'next/image';
 import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
-
+import { IMusicSearchResult } from '@/interfaces/search';
 type Props = {
-  title: string;
-  description: string;
-  coverId: number;
+  music?: IMusicSearchResult | null;
   playing?: boolean;
   onPlay?: () => void;
   onPause?: () => void;
@@ -16,37 +14,53 @@ type Props = {
 };
 
 const PlayBar = (props: Props) => {
-  const { title, description, coverId, playing, onPlay, onPause, onNext } =
-    props;
+  const { music, playing, onPlay, onPause, onNext } = props;
+
+  function handlePlay() {
+    music && onPlay && onPlay();
+  }
+
+  function handlePause() {
+    music && onPause && onPause();
+  }
+
+  function handleNext() {
+    music && onNext && onNext();
+  }
+
+  const iconPathProps = { ...(music ? {} : { path: { fill: 'gray' } }) };
+
   return (
     <div className='play-bar-warp'>
       <div className='play-bar'>
         <div className='play-bar-left'>
-          <div>
-            <Image
-              alt=''
-              src={'http://127.0.0.1:3000/files/cover?id=' + coverId}
-              width={40}
-              height={40}
-            />
-          </div>
-          <div>
-            <div className='play-bar-title'>{title}</div>
-            <div className='play-bar-description'>{description}</div>
-          </div>
+          <Image
+            alt=''
+            src={
+              music ? '/files/cover?id=' + music.coverId : '/images/music.jpg'
+            }
+            width={40}
+            height={40}
+          />
+          {music && (
+            <div>
+              <div className='play-bar-title'>{music.name}</div>
+              <div className='play-bar-description'>{`${music.artist} - ${music.name}`}</div>
+            </div>
+          )}
         </div>
         <div className='play-bar-right'>
           {playing ? (
-            <span onClick={onPause && onPause}>
-              <PauseIcon />
+            <span onClick={handlePause}>
+              <PauseIcon {...iconPathProps} />
             </span>
           ) : (
-            <span onClick={onPlay && onPlay}>
-              <PlayIcon />
+            <span onClick={handlePlay}>
+              <PlayIcon {...iconPathProps} />
             </span>
           )}
-          <span onClick={onNext && onNext}>
-            <NextIcon />
+          <span onClick={handleNext}>
+            <NextIcon {...iconPathProps} />
           </span>
         </div>
       </div>

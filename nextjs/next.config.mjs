@@ -12,7 +12,7 @@ const withPWA = nextPWA({
 
 const nextConfig = {
     images: {
-        domains: ["127.0.0.1", "doubleu.work"],
+        domains: ["localhost", "127.0.0.1", "doubleu.work"],
     },
 };
 

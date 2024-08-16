@@ -20,15 +20,15 @@ export default function Home() {
   });
   const [searchList, setSearchList] = useState<IMusicSearchResult[]>([]);
   const [playList, setPlayList] = useState<IMusicSearchResult[]>([]);
-  const [currentMusic, setCurrentMusic] = useState<IMusicSearchResult>(
-    {} as IMusicSearchResult
+  const [currentMusic, setCurrentMusic] = useState<IMusicSearchResult | null>(
+    null
   );
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [playLoading, setPlayLoading] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
 
   function setMetadata() {
-    if ('mediaSession' in navigator) {
+    if ('mediaSession' in navigator && currentMusic) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentMusic.name,
         artist: currentMusic.artist,
@@ -45,7 +45,7 @@ export default function Home() {
   }
 
   function nextMusic() {
-    const index = playList.findIndex((x) => x.id === currentMusic.id);
+    const index = playList.findIndex((x) => x.id === currentMusic!.id);
     const playListCount = playList.length;
     if (index >= 0 && index < playListCount - 1) {
       setCurrentMusic(playList[index + 1]);
@@ -55,7 +55,7 @@ export default function Home() {
   }
 
   function prevMusic() {
-    const index = playList.findIndex((x) => x.id === currentMusic.id);
+    const index = playList.findIndex((x) => x.id === currentMusic!.id);
     if (index != 0) {
       setCurrentMusic(playList[index - 1]);
     } else {
@@ -64,7 +64,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!isEmpty(currentMusic)) {
+    if (currentMusic) {
       howler?.unload();
       howler = new Howl({
         src: 'files/music?id=' + currentMusic.id,
@@ -140,17 +140,16 @@ export default function Home() {
 
   return (
     <main className={styles.container}>
-      {!isEmpty(currentMusic) && (
-        <PlayBar
-          onNext={handleNext}
-          onPause={handlePause}
-          onPlay={handlePlay}
-          playing={playing}
-          coverId={currentMusic.coverId}
-          title={currentMusic.name}
-          description={`${currentMusic.artist} - ${currentMusic.name}`}
-        />
-      )}
+      <PlayBar
+        onNext={handleNext}
+        onPause={handlePause}
+        onPlay={handlePlay}
+        playing={playing}
+        music={currentMusic}
+        // coverId={currentMusic.coverId}
+        // title={currentMusic.name}
+        // description={`${currentMusic.artist} - ${currentMusic.name}`}
+      />
       <SearchBar searching={searchLoading} onSearch={handleSearch} />
       {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />}
       <PlayList>
