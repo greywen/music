@@ -3,6 +3,8 @@
   "short_name": "音乐",
   "start_url": "/",
   "display": "standalone",
+  "background_color": "#f6f8ff",
+  "theme_color": "#f6f8ff",
   "icons": [
     {
       "src": "/icon.png",

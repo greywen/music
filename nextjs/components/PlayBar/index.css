@@ -1,7 +1,7 @@
 .play-bar-warp {
     padding  : 0 .8125rem;
     position : fixed;
-    z-index  : 99;
+    z-index  : 1;
     bottom   : 12px;
     right    : 0;
     left     : 0;

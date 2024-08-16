@@ -11,10 +11,11 @@ type Props = {
   onPlay?: () => void;
   onPause?: () => void;
   onNext?: () => void;
+  onClickLeft?: () => void;
 };
 
 const PlayBar = (props: Props) => {
-  const { music, playing, onPlay, onPause, onNext } = props;
+  const { music, playing, onPlay, onPause, onNext, onClickLeft } = props;
 
   function handlePlay() {
     music && onPlay && onPlay();
@@ -28,12 +29,16 @@ const PlayBar = (props: Props) => {
     music && onNext && onNext();
   }
 
+  function handleClickLeft() {
+    music && onClickLeft && onClickLeft();
+  }
+
   const iconPathProps = { ...(music ? {} : { path: { fill: 'gray' } }) };
 
   return (
     <div className='play-bar-warp'>
       <div className='play-bar'>
-        <div className='play-bar-left'>
+        <div className='play-bar-left' onClick={handleClickLeft}>
           <Image
             alt=''
             src={

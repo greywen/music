@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { search } from '@/apis/musicApi';
-import { isEmpty } from '@/utils/common';
 import { IPaging } from '@/interfaces/page';
 import { IMusicSearchResult } from '@/interfaces/search';
+import PlayDrawer from '@/components/PlayDrawer';
 
 let howler: Howl;
 export default function Home() {
@@ -26,6 +26,7 @@ export default function Home() {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [playLoading, setPlayLoading] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
+  const [playDrawerOpen, setPlayDrawer] = useState<boolean>(false);
 
   function setMetadata() {
     if ('mediaSession' in navigator && currentMusic) {
@@ -138,17 +139,19 @@ export default function Home() {
     howler.play();
   }
 
+  function handlePrev() {}
+
   return (
     <main className={styles.container}>
       <PlayBar
         onNext={handleNext}
         onPause={handlePause}
         onPlay={handlePlay}
+        onClickLeft={() => {
+          setPlayDrawer(true);
+        }}
         playing={playing}
         music={currentMusic}
-        // coverId={currentMusic.coverId}
-        // title={currentMusic.name}
-        // description={`${currentMusic.artist} - ${currentMusic.name}`}
       />
       <SearchBar searching={searchLoading} onSearch={handleSearch} />
       {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />}
@@ -162,6 +165,18 @@ export default function Home() {
           />
         ))}
       </PlayList>
+      <PlayDrawer
+        playing={playing}
+        music={currentMusic!}
+        open={playDrawerOpen}
+        onOpenChange={() => {
+          setPlayDrawer(false);
+        }}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onPlay={handlePlay}
+        onPause={handlePause}
+      />
     </main>
   );
 }
