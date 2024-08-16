@@ -4,21 +4,22 @@ import styles from './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayListAction from '@/components/PlayList/PalyAction';
 import PlayList from '@/components/PlayList/PlayList';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { search } from '@/apis/musicApi';
-import { IPaging } from '@/interfaces/page';
-import { IMusicSearchResult } from '@/interfaces/search';
+import { IMusicSearchParams, IMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
+import PlayListLoading from '@/components/PlayList/PlayListLoading';
 
 let howler: Howl;
 export default function Home() {
-  const [searchPaging, setSearchPaging] = useState<IPaging>({
-    pages: 1,
-    count: 20,
-  });
+  const initSearchParams = { query: '', pages: 1, count: 50 };
+  const [searchParams, setSearchParams] =
+    useState<IMusicSearchParams>(initSearchParams);
+  const [showMore, setShowMore] = useState(true);
   const [searchList, setSearchList] = useState<IMusicSearchResult[]>([]);
+  const observer = useRef<IntersectionObserver | null>(null);
   const [playList, setPlayList] = useState<IMusicSearchResult[]>([]);
   const [currentMusic, setCurrentMusic] = useState<IMusicSearchResult | null>(
     null
@@ -27,6 +28,30 @@ export default function Home() {
   const [playLoading, setPlayLoading] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
   const [playDrawerOpen, setPlayDrawer] = useState<boolean>(false);
+
+  const moreRef = useCallback(
+    (node: HTMLDivElement) => {
+      // if (searchLoading || !searchParams.query) return;
+      // if (observer.current) observer.current.disconnect();
+      // observer.current = new IntersectionObserver((entries) => {
+      //   if (entries[0].isIntersecting) {
+      //     const pages = searchParams.pages + 1;
+      //     setSearchParams((prev) => ({ ...prev, pages }));
+      //     setSearchLoading(true);
+      //     search({
+      //       ...searchParams,
+      //       pages,
+      //     }).then((data) => {
+      //       setShowMore(data.length > initSearchParams.count);
+      //       setSearchList((prev) => [...prev, ...data]);
+      //       setSearchLoading(false);
+      //     });
+      //   }
+      // });
+      // if (node) observer.current.observe(node);
+    },
+    [searchLoading]
+  );
 
   function setMetadata() {
     if ('mediaSession' in navigator && currentMusic) {
@@ -51,7 +76,6 @@ export default function Home() {
     if (index >= 0 && index < playListCount - 1) {
       setCurrentMusic(playList[index + 1]);
     } else {
-      handlePause();
     }
   }
 
@@ -60,7 +84,6 @@ export default function Home() {
     if (index != 0) {
       setCurrentMusic(playList[index - 1]);
     } else {
-      handlePause();
     }
   }
 
@@ -101,10 +124,21 @@ export default function Home() {
   }, [currentMusic]);
 
   async function handleSearch(value: string) {
+    if (!value) {
+      setSearchParams(initSearchParams);
+      setSearchList([]);
+      return;
+    }
+    setSearchParams((prev) => ({ ...prev, query: value }));
     setSearchLoading(true);
-    const data = await search({ ...searchPaging, query: value });
-    setSearchList(data);
-    setSearchLoading(false);
+    search({
+      ...searchParams,
+      query: value,
+    }).then((data) => {
+      setSearchList(data);
+      setShowMore(data.length > initSearchParams.count);
+      setSearchLoading(false);
+    });
   }
 
   function handlePlaySingle(musicId: number) {
@@ -139,7 +173,9 @@ export default function Home() {
     howler.play();
   }
 
-  function handlePrev() {}
+  function handlePrev() {
+    prevMusic();
+  }
 
   return (
     <main className={styles.container}>
@@ -164,6 +200,8 @@ export default function Home() {
             onClickLeft={() => handlePlaySingle(x.id)}
           />
         ))}
+        {searchLoading && <PlayListLoading />}
+        <div ref={moreRef} style={{ height: 48 }}></div>
       </PlayList>
       <PlayDrawer
         playing={playing}

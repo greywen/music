@@ -13,8 +13,8 @@
 }
 
 .list-item .item-title {
-    display: flex;
-    font   : 400 16px var(--ff);
+    display      : flex;
+    font         : 400 16px var(--ff);
     white-space  : nowrap;
     text-overflow: ellipsis;
 }
@@ -24,6 +24,16 @@
     white-space  : nowrap;
     text-overflow: ellipsis;
     font         : 300 13px/1.5 var(--ff);
+    color        : #777;
+}
+
+.list-loading {
+    height         : 32px;
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    width          : 100%;
+    font           : 400 12px var(--ff);
     color        : #777;
 }
 
