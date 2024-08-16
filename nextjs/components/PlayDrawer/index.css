@@ -1,6 +1,7 @@
 .play-drawer {}
 
 .play-drawer-content {
+    overflow        : hidden;
     position        : fixed;
     z-index         : 99;
     bottom          : 0;

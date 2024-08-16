@@ -42,7 +42,7 @@ const PlayBar = (props: Props) => {
           <Image
             alt=''
             src={
-              music ? '/files/cover?id=' + music.coverId : '/images/music.jpg'
+              music ? 'http://127.0.0.1:3000/files/cover?id=' + music.coverId : '/images/music.jpg'
             }
             width={40}
             height={40}

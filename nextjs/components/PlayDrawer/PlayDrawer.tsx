@@ -24,10 +24,27 @@ interface IProps {
 const PlayDrawer = (props: IProps) => {
   const svgSize = { width: 50, height: 50 };
   const playSvgSize = { width: 68, height: 68 };
-  const { playing, music, open, onOpenChange, onPlay, onPause } = props;
+  const {
+    playing,
+    music,
+    open,
+    onOpenChange,
+    onPlay,
+    onPause,
+    onPrev,
+    onNext,
+  } = props;
 
   function handlePlay() {
     playing ? onPause() : onPlay();
+  }
+
+  function handlePrev() {
+    onPrev();
+  }
+
+  function handleNext() {
+    onNext();
   }
 
   return (
@@ -69,7 +86,7 @@ const PlayDrawer = (props: IProps) => {
             <div></div>
             <div className='play-drawer-play-action-bar'>
               <div className='play-drawer-play-action-bar-content'>
-                <span>
+                <span onClick={handlePrev}>
                   <PrevIcon svg={{ ...svgSize }} />
                 </span>
                 <span onClick={handlePlay}>
@@ -79,7 +96,7 @@ const PlayDrawer = (props: IProps) => {
                     <PlayIcon svg={{ ...playSvgSize }} />
                   )}
                 </span>
-                <span>
+                <span onClick={handleNext}>
                   <NextIcon svg={{ ...svgSize }} />
                 </span>
               </div>
