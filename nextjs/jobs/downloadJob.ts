@@ -37,11 +37,11 @@ export default async function downloadJob() {
       data: { status: 'Done' },
     });
     console.log(`download job ${pendingJob.id} done`);
-  } catch {
+  } catch (error) {
+    console.log('download job error: ', JSON.stringify(error));
     await prisma.job.update({
       where: { id: pendingJob.id },
       data: { status: 'Failed' },
     });
-    console.log(`download job ${pendingJob.id} failed`);
   }
 }
