@@ -142,15 +142,10 @@ export default function Home() {
   }
 
   function handlePlaySingle(musicId: number) {
-    let music = playList.find((x) => x.id === musicId);
+    let music = searchList.find((x) => x.id === musicId);
     if (music) {
+      setPlayList(searchList);
       setCurrentMusic(music);
-    } else {
-      music = searchList.find((x) => x.id === musicId);
-      if (music) {
-        setPlayList([music]);
-        setCurrentMusic(music);
-      }
     }
   }
 
