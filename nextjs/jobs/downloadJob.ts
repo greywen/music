@@ -3,6 +3,7 @@ import prisma from '../prisma/prisma';
 import downloadMusic from '../utils/downloadMusic';
 
 export default async function downloadJob() {
+  console.log('download job', new Date());
   const runningJob = await prisma.job.findFirst({
     where: { status: 'Running' },
   });
@@ -38,7 +39,8 @@ export default async function downloadJob() {
     });
     console.log(`download job ${pendingJob.id} done`);
   } catch (error) {
-    console.log('download job error: ', JSON.stringify(error));
+    console.log('download job error:');
+    console.log(error);
     await prisma.job.update({
       where: { id: pendingJob.id },
       data: { status: 'Failed' },
