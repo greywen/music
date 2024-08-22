@@ -29,6 +29,10 @@ export default function Home() {
   const [playing, setPlaying] = useState<boolean>(false);
   const [playDrawerOpen, setPlayDrawer] = useState<boolean>(false);
 
+  function handleClearSearch() {
+    setSearchList([]);
+  }
+
   const moreRef = useCallback(
     (node: HTMLDivElement) => {
       // if (searchLoading || !searchParams.query) return;
@@ -184,7 +188,7 @@ export default function Home() {
         playing={playing}
         music={currentMusic}
       />
-      <SearchBar searching={searchLoading} onSearch={handleSearch} />
+      <SearchBar searching={searchLoading} onSearch={handleSearch} onClear={handleClearSearch} />
       {/* {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />} */}
       <PlayList>
         {searchList.map((x) => (

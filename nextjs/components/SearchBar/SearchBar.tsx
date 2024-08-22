@@ -2,18 +2,21 @@
 import { useState } from 'react';
 import './index.css';
 import SearchIcon from '../Icons/SearchIcon';
+import { ClearIcon } from '../Icons';
 
 type Props = {
   searching?: boolean;
   onSearch: (value: string) => void;
+  onClear: () => void;
 };
 
 const SearchBar = (props: Props) => {
-  const { searching, onSearch } = props;
+  const { searching, onSearch, onClear } = props;
   const [value, setValue] = useState('周杰伦');
 
   function handleClear() {
     setValue('');
+    onClear && onClear();
   }
 
   function handleSearch(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -43,7 +46,7 @@ const SearchBar = (props: Props) => {
             handleClear();
           }}
         >
-          清空
+          <ClearIcon />
         </span>
       </div>
     </div>
