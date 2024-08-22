@@ -185,7 +185,7 @@ export default function Home() {
         music={currentMusic}
       />
       <SearchBar searching={searchLoading} onSearch={handleSearch} />
-      {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />}
+      {/* {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />} */}
       <PlayList>
         {searchList.map((x) => (
           <PlayListItem
