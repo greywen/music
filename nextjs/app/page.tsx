@@ -2,9 +2,8 @@
 import SearchBar from '@/components/SearchBar/SearchBar';
 import styles from './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
-import PlayListAction from '@/components/PlayList/PalyAction';
 import PlayList from '@/components/PlayList/PlayList';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { search } from '@/apis/musicApi';
@@ -17,9 +16,8 @@ export default function Home() {
   const initSearchParams = { query: '', pages: 1, count: 50 };
   const [searchParams, setSearchParams] =
     useState<IMusicSearchParams>(initSearchParams);
-  const [showMore, setShowMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
   const [searchList, setSearchList] = useState<IMusicSearchResult[]>([]);
-  const observer = useRef<IntersectionObserver | null>(null);
   const [playList, setPlayList] = useState<IMusicSearchResult[]>([]);
   const [currentMusic, setCurrentMusic] = useState<IMusicSearchResult | null>(
     null
@@ -32,30 +30,6 @@ export default function Home() {
   function handleClearSearch() {
     setSearchList([]);
   }
-
-  const moreRef = useCallback(
-    (node: HTMLDivElement) => {
-      // if (searchLoading || !searchParams.query) return;
-      // if (observer.current) observer.current.disconnect();
-      // observer.current = new IntersectionObserver((entries) => {
-      //   if (entries[0].isIntersecting) {
-      //     const pages = searchParams.pages + 1;
-      //     setSearchParams((prev) => ({ ...prev, pages }));
-      //     setSearchLoading(true);
-      //     search({
-      //       ...searchParams,
-      //       pages,
-      //     }).then((data) => {
-      //       setShowMore(data.length > initSearchParams.count);
-      //       setSearchList((prev) => [...prev, ...data]);
-      //       setSearchLoading(false);
-      //     });
-      //   }
-      // });
-      // if (node) observer.current.observe(node);
-    },
-    [searchLoading]
-  );
 
   function setMetadata() {
     if ('mediaSession' in navigator && currentMusic) {
@@ -128,21 +102,33 @@ export default function Home() {
   }, [currentMusic]);
 
   async function handleSearch(value: string) {
+    setSearchList([]);
+    setSearchParams(initSearchParams);
     if (!value) {
-      setSearchParams(initSearchParams);
-      setSearchList([]);
       return;
     }
-    setSearchParams((prev) => ({ ...prev, query: value }));
+    await sendSearch({ ...initSearchParams, query: value });
+  }
+
+  async function sendSearch(params: IMusicSearchParams, isNewSearch = true) {
+    setSearchParams(params);
     setSearchLoading(true);
     search({
-      ...searchParams,
-      query: value,
+      ...params,
     }).then((data) => {
-      setSearchList(data);
-      setShowMore(data.length > initSearchParams.count);
+      setSearchList((prev) =>
+        !isNewSearch ? [...prev, ...data.data] : data.data
+      );
+      setTotalCount(data.count);
+
       setSearchLoading(false);
     });
+  }
+
+  async function handleScrollToBottom() {
+    if (searchList.length === totalCount || searchLoading) return;
+    const params = { ...searchParams, pages: searchParams.pages + 1 };
+    await sendSearch(params, false);
   }
 
   function handlePlaySingle(musicId: number) {
@@ -151,11 +137,6 @@ export default function Home() {
       setPlayList(searchList);
       setCurrentMusic(music);
     }
-  }
-
-  function handlePlayAll() {
-    setPlayList(searchList);
-    setCurrentMusic(searchList[0]);
   }
 
   function handleNext() {
@@ -188,19 +169,21 @@ export default function Home() {
         playing={playing}
         music={currentMusic}
       />
-      <SearchBar searching={searchLoading} onSearch={handleSearch} onClear={handleClearSearch} />
-      {/* {searchList.length > 0 && <PlayListAction onPlayAll={handlePlayAll} />} */}
-      <PlayList>
+      <SearchBar
+        searching={searchLoading}
+        onSearch={handleSearch}
+        onClear={handleClearSearch}
+      />
+      <PlayList onScrollToBottom={handleScrollToBottom}>
         {searchList.map((x) => (
           <PlayListItem
             key={x.id}
             title={x.name}
-            description={`${x.artist} - ${x.name}`}
+            description={`${x.artist} - ${x.album}`}
             onClickLeft={() => handlePlaySingle(x.id)}
           />
         ))}
         {searchLoading && <PlayListLoading />}
-        <div ref={moreRef} style={{ height: 48 }}></div>
       </PlayList>
       <PlayDrawer
         playing={playing}
