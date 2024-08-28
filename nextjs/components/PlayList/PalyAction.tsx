@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import './index.css';
 
 type Props = {
   onPlayAll: () => void;
@@ -9,6 +8,7 @@ type Props = {
 const PlayListAction = (props: Props) => {
   const { onPlayAll } = props;
   const [showFullActionBar, setFullActionBar] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollTop = document.documentElement.scrollTop;
@@ -27,17 +27,23 @@ const PlayListAction = (props: Props) => {
   }, []);
 
   return (
-    <div
-      className={`action-warp ${showFullActionBar ? 'action-warp-full' : ''}`}
-    >
-      <div className='action-bar'>
-        <div className='action-bar-left' onClick={onPlayAll}>
-          <span className='action-bar-play-icon'></span>
+    <div className={`px-3 sticky top-0 z-10 ${showFullActionBar ? 'p-0' : ''}`}>
+      <div
+        className={`flex items-center justify-between h-12 bg-white rounded-lg w-full my-2 ${
+          showFullActionBar ? '' : 'p-3'
+        }`}
+      >
+        <div
+          className='flex items-center gap-2.5 text-base font-normal'
+          onClick={onPlayAll}
+        >
+          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-green-500 before:content-[''] before:block before:h-0 before:w-0 before:mr-[-13px] before:border-[7px_11px] before:border-solid before:border-transparent before:border-l-white"></span>
           播放全部
         </div>
-        <div className='action-bar-right'></div>
+        <div className='flex text-sm font-light'></div>
       </div>
     </div>
   );
 };
+
 export default PlayListAction;

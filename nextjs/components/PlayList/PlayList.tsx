@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import './index.css';
 import useScrollToBottom from '@/hooks/useScrollToBottom';
 
 type Props = {
@@ -20,9 +19,10 @@ const PlayList = (props: Props) => {
   }
 
   return (
-    <div ref={containerRef} className='list-warp'>
+    <div ref={containerRef} className='px-3 h-[calc(100vh-120px)] overflow-y-auto'>
       {props.children}
     </div>
   );
 };
+
 export default PlayList;

@@ -158,7 +158,7 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.container}>
+    <main className='max-w-[400px] mx-auto py-[0.8125rem] md:max-w-[768px]'>
       <PlayBar
         onNext={handleNext}
         onPause={handlePause}

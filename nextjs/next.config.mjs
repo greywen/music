@@ -12,7 +12,23 @@ const withPWA = nextPWA({
 
 const nextConfig = {
     images: {
-        domains: ["localhost", "127.0.0.1", "doubleu.work"],
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                pathname: '**',
+            },
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'doubleu.work',
+                pathname: '**',
+            },
+        ],
     },
 };
 

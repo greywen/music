@@ -12,7 +12,7 @@ datasource db {
 
 model Music {
     id          Int           @id @default(autoincrement())
-    mid         String        @db.VarChar(50)
+    mid         String        @unique @db.VarChar(50)
     sourceId    Int
     url         String        @db.VarChar(255)
     name        String        @db.VarChar(50)
@@ -47,7 +47,10 @@ model MusicArtist {
 
 model Singer {
     id          Int           @id @default(autoincrement())
+    mid         String        @unique @db.VarChar(50)
     name        String        @unique @db.VarChar(50)
+    picture     String?       @db.VarChar(200)
+    area        Int?          @db.SmallInt
     MusicArtist MusicArtist[]
     Album       Album[]
 }

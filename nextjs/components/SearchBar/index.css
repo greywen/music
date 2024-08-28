@@ -18,13 +18,13 @@
     position: absolute;
     left    : .8125rem;
     top     : 15px;
-    color   : var(--clr-primary-100);
+    color   : #0079ff;
     height  : 20px;
 }
 
 .search-wrap .search-wrap__search-box .search-clear-btn {
     padding   : 8px 18px;
-    font-size : var(--fs-button);
+    font-size : 0.875rem;
     border    : none;
     transition: 0.3s ease-in-out;
     cursor    : pointer;

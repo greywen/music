@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import './index.css';
 import SearchIcon from '../Icons/SearchIcon';
 import { ClearIcon } from '../Icons';
 
@@ -26,8 +25,8 @@ const SearchBar = (props: Props) => {
   }
 
   return (
-    <div className='search-wrap'>
-      <div className='search-wrap__search-box'>
+    <div className='px-3'>
+      <div className='relative'>
         <input
           enterKeyHint='search'
           name='search'
@@ -37,11 +36,17 @@ const SearchBar = (props: Props) => {
             setValue(e.target.value);
           }}
           onKeyDown={handleSearch}
+          className='p-4 pl-11 w-full border-none rounded-2xl shadow-md shadow-[rgba(70,96,187,0.2)]'
         />
-        <SearchIcon svg={{ viewBox: '0 0 24 24', className: 'search-icon' }} />
+        <SearchIcon
+          svg={{
+            viewBox: '0 0 24 24',
+            className: 'absolute left-3.5 top-[15px] text-blue-500 h-5',
+          }}
+        />
         <span
           hidden={!value}
-          className='search-clear-btn'
+          className='absolute right-[2.14%] top-[6px] py-2 px-4 text-sm cursor-pointer transition ease-in-out text-gray-500'
           onClick={() => {
             handleClear();
           }}
@@ -52,4 +57,5 @@ const SearchBar = (props: Props) => {
     </div>
   );
 };
+
 export default SearchBar;

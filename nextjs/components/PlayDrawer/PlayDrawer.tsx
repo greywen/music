@@ -1,5 +1,4 @@
 'use client';
-import './index.css';
 import Image from 'next/image';
 import { IMusicSearchResult } from '@/interfaces/search';
 import { Drawer } from 'vaul';
@@ -51,15 +50,11 @@ const PlayDrawer = (props: IProps) => {
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
         {music && (
-          <Drawer.Content className='play-drawer-content'>
-            <div className='play-drawer-close-bar'></div>
-            <div className='play-drawer-bar'></div>
+          <Drawer.Content className='overflow-hidden fixed z-[999999999] bottom-0 left-0 right-0 top-0 bg-white'>
+            <div className='mx-auto mt-4 h-2 w-24 rounded-full bg-[#f6f8ff]'></div>
+            <div className='h-7 w-full'></div>
             <div
-              className={
-                playing
-                  ? 'play-drawer-cover play-drawer-cover-playing'
-                  : 'play-drawer-cover'
-              }
+              className={`px-8 py-6 flex justify-center items-center h-[350px] ${playing ? 'play-drawer-cover-playing' : ''}`}
               onClick={handlePlay}
             >
               <Image
@@ -67,25 +62,28 @@ const PlayDrawer = (props: IProps) => {
                 src={'http://127.0.0.1:3000/files/cover?id=' + music.coverId}
                 width={230}
                 height={230}
+                className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
               />
             </div>
-            <div className='play-drawer-play-bar'>
-              <div className='play-drawer-play-bar-left'>
-                <div className='play-drawer-play-bar-title'>{music.name}</div>
-                <div className='play-drawer-play-bar-description'>{`${music.artist} - ${music.name}`}</div>
+            <div className='px-8 w-full flex items-center'>
+              <div className='w-3/4'>
+                <div className='font-semibold text-xl truncate w-44'>{music.name}</div>
+                <div className='block w-44 truncate text-sm text-[#777]'>
+                  {`${music.artist} - ${music.name}`}
+                </div>
               </div>
-              <div className='play-drawer-play-bar-right'>
-                <span>
+              <div className='w-1/4 flex items-center justify-end gap-3 leading-8'>
+                <span className='flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full'>
                   <StarIcon />
                 </span>
-                <span>
+                <span className='flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full'>
                   <MoreIcon />
                 </span>
               </div>
             </div>
             <div></div>
-            <div className='play-drawer-play-action-bar'>
-              <div className='play-drawer-play-action-bar-content'>
+            <div className='h-32 w-full flex items-center justify-center'>
+              <div className='h-16 flex items-center w-3/5 justify-between'>
                 <span onClick={handlePrev}>
                   <PrevIcon svg={{ ...svgSize }} />
                 </span>
