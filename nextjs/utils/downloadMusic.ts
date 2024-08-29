@@ -28,12 +28,10 @@ interface ITransferOption {
 
 interface ICreateMusic {
   mid: string;
-  sourceId: number;
   name: string;
   albumId?: number;
   lyricId: number;
   url: string;
-  br: number;
   size: number;
 }
 
@@ -84,9 +82,9 @@ async function findMusicIds(ids: string[]) {
 
 async function createSinger(tx: ITx, name: string) {
   return await tx.singer.upsert({
-    where: { name },
+    where: { name, mid: '' },
     update: {},
-    create: { name },
+    create: { name, mid: '' },
   });
 }
 
@@ -115,21 +113,19 @@ async function createArtist(tx: ITx, musicId: number, singerId: number) {
   });
 }
 
-async function createLyric(tx: ITx, text: string) {
-  return await tx.lyric.create({ data: { text } });
+async function createLyric(tx: ITx, lyric: string) {
+  return await tx.lyric.create({ data: { lyric } });
 }
 
 async function createMusic(tx: ITx, params: ICreateMusic) {
-  const { mid, sourceId, name, albumId, lyricId, url, br, size } = params;
+  const { mid, name, albumId, lyricId, url, size } = params;
   return await tx.music.create({
     data: {
       mid,
-      sourceId,
       name,
       albumId,
       lyricId,
       url,
-      br,
       size,
     },
   });
@@ -137,18 +133,8 @@ async function createMusic(tx: ITx, params: ICreateMusic) {
 
 function transfer(option: ITransferOption) {
   return prisma.$transaction(async (tx) => {
-    const {
-      mid,
-      sourceId,
-      name,
-      albumName,
-      artist,
-      url,
-      lyricText,
-      coverUrl,
-      br,
-      size,
-    } = option;
+    const { mid, name, albumName, artist, url, lyricText, coverUrl, size } =
+      option;
 
     let cover = null;
     if (coverUrl) {
@@ -169,12 +155,10 @@ function transfer(option: ITransferOption) {
     const lyric = await createLyric(tx, lyricText);
     const music = await createMusic(tx, {
       mid,
-      sourceId,
       name,
       albumId: albumId,
       lyricId: lyric.id,
       url,
-      br,
       size,
     });
     for (const singerId of singerIds) {

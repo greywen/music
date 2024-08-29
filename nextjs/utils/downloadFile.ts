@@ -15,6 +15,21 @@ export function getUrlExtension(url: string): string {
   return match ? `.${match[1]}` : '';
 }
 
+export function getFileNameFromUrl(url: string): string | null {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const fileName = pathname.substring(pathname.lastIndexOf('/') + 1);
+    if (!fileName) {
+      return null;
+    }
+    return fileName;
+  } catch (error) {
+    console.error('Invalid URL:', error);
+    return null;
+  }
+}
+
 export async function downloadFile(
   options: IDownloadFileOptions
 ): Promise<string> {
