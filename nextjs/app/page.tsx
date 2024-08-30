@@ -6,7 +6,7 @@ import PlayList from '@/components/PlayList/PlayList';
 import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
-import { search } from '@/apis/musicApi';
+import { randomMusic, search } from '@/apis/musicApi';
 import { IMusicSearchParams, IMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
@@ -157,6 +157,15 @@ export default function Home() {
     prevMusic();
   }
 
+  function getRandomMusic() {
+    randomMusic().then((data) => {
+      if (data.length > 0) {
+        setPlayList(data);
+        setCurrentMusic(data[0]);
+      }
+    });
+  }
+
   return (
     <main className='max-w-[400px] mx-auto py-[0.8125rem] md:max-w-[768px]'>
       <PlayBar
@@ -174,6 +183,11 @@ export default function Home() {
         onSearch={handleSearch}
         onClear={handleClearSearch}
       />
+      {searchList.length === 0 && (
+        <div className='flex justify-center mt-4 text-green-800' onClick={getRandomMusic}>
+          随机音乐100首
+        </div>
+      )}
       <PlayList onScrollToBottom={handleScrollToBottom}>
         {searchList.map((x) => (
           <PlayListItem

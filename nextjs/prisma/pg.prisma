@@ -47,7 +47,7 @@ model MusicArtist {
 
 model Singer {
     id          Int           @id @default(autoincrement())
-    mid         String        @unique @db.VarChar(50)
+    mid         String?       @unique @db.VarChar(50)
     name        String        @unique @db.VarChar(50)
     picture     String?       @db.VarChar(200)
     area        Int?          @db.SmallInt
