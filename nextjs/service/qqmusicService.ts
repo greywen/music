@@ -156,27 +156,25 @@ export default class QQMusicService {
     const { singermid, num, page = 1 } = params;
     const pageSize = num ? num : 20;
     const pageNumber = page;
-
-    const result = await QQMusicService.get<QQSingerSongResult>(
-      `http://u.y.qq.com/cgi-bin/musicu.fcg?data=${encodeURIComponent(
-        JSON.stringify({
-          comm: {
-            ct: 24,
-            cv: 0,
+    const url = `http://u.y.qq.com/cgi-bin/musicu.fcg?data=${encodeURIComponent(
+      JSON.stringify({
+        comm: {
+          ct: 24,
+          cv: 0,
+        },
+        singer: {
+          method: 'get_singer_detail_info',
+          param: {
+            sort: 5,
+            singermid,
+            sin: (pageNumber - 1) * pageSize,
+            num: pageSize,
           },
-          singer: {
-            method: 'get_singer_detail_info',
-            param: {
-              sort: 5,
-              singermid,
-              sin: (pageNumber - 1) * pageSize,
-              num: pageSize,
-            },
-            module: 'music.web_singer_info_svr',
-          },
-        })
-      )}`
-    );
+          module: 'music.web_singer_info_svr',
+        },
+      })
+    )}`;
+    const result = await QQMusicService.get<QQSingerSongResult>(url);
 
     if (!result) return null;
 

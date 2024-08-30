@@ -2,8 +2,8 @@ import { Router } from 'express';
 import path from 'path';
 import * as fs from 'fs';
 import prisma from '../prisma/prisma';
-import download from '@/utils/downloadMusic';
-import { getMusicList } from '@/service/music';
+import download from '../utils/downloadMusic';
+import { getMusicList } from '../service/music';
 
 const router = Router();
 

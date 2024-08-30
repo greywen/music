@@ -1,6 +1,6 @@
 'use client';
 import SearchBar from '@/components/SearchBar/SearchBar';
-import styles from './page.module.css';
+import './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayList from '@/components/PlayList/PlayList';
 import { useEffect, useState } from 'react';
@@ -117,9 +117,9 @@ export default function Home() {
       ...params,
     }).then((data) => {
       setSearchList((prev) =>
-        !isNewSearch ? [...prev, ...data.data] : data.data
+        !isNewSearch ? [...prev, ...data.list] : data.list
       );
-      setTotalCount(data.count);
+      setTotalCount(data.total);
 
       setSearchLoading(false);
     });

@@ -86,5 +86,5 @@ export async function GET(request: Request) {
     pageSize,
     (pages - 1) * pageSize
   );
-  return new Response(JSON.stringify({ data, count }));
+  return new Response(JSON.stringify({ list: data, total: count }));
 }

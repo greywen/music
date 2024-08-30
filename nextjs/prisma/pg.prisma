@@ -46,6 +46,7 @@ model Singer {
     mid         String        @unique @db.VarChar(50)
     name        String        @db.VarChar(200)
     picture     String?       @db.Text
+    songCount   Int           @default(0)
     MusicArtist MusicArtist[]
     Album       Album[]
 }

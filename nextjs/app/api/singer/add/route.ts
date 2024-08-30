@@ -39,7 +39,6 @@ export async function POST() {
     let eachCount = Math.ceil(singerList.total / 80);
     let pageNo = 0;
     let singers = [];
-    console.log('total', singerList.total);
     while (eachCount != 0) {
       eachCount -= 1;
       pageNo += 1;

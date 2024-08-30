@@ -4,6 +4,6 @@ export interface IPaging {
 }
 
 export interface IPagingResult<T> {
-  count: number;
-  data: T[];
+  total: number;
+  list: T[];
 }
