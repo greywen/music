@@ -28,6 +28,12 @@ export async function POST() {
     pageNo: 1,
   });
 
+  if (!singerList) {
+    return Response.json({
+      message: '获取歌手列表失败',
+    });
+  }
+
   const singerCount = await prisma.singer.count();
   if (singerList.total > singerCount) {
     let eachCount = Math.ceil(singerList.total / 80);
@@ -44,6 +50,9 @@ export async function POST() {
         sex: -100,
         pageNo,
       });
+      if (!qqSingers) {
+        break;
+      }
       const qqSingersList = qqSingers.list.map((x) => {
         return {
           name: x.singer_name,
@@ -68,21 +77,4 @@ export async function POST() {
     }
     return new Response('Done');
   }
-}
-
-interface SingerList {
-  area: number;
-  genre: number;
-  index: number;
-  sex: number;
-  total: number;
-  list: List[];
-}
-
-interface List {
-  country: string;
-  singer_id: number;
-  singer_mid: string;
-  singer_name: string;
-  singer_pic: string;
 }
