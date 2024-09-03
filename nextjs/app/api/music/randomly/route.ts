@@ -9,7 +9,7 @@ interface IRandomResult {
   coverId: number;
 }
 
-const search = async () => {
+const random100 = async () => {
   return await prisma.$queryRaw<IRandomResult[]>(
     Prisma.sql`
   SELECT DISTINCT ON
@@ -32,6 +32,6 @@ const search = async () => {
 };
 
 export async function GET() {
-  const data = await search();
+  const data = await random100();
   return new Response(JSON.stringify(data));
 }
