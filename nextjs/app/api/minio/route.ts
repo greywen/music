@@ -36,6 +36,7 @@ export async function POST() {
 
   const musics = await prisma.music.findMany({
     select: { id: true, url: true },
+    where: { objectName: { not: null } },
   });
 
   processUpload(minioClient, musics);
