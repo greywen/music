@@ -20,14 +20,14 @@ const search = async () => {
     AL."coverId" AS "coverId" 
   FROM
     "Music"M 
+    TABLESAMPLE SYSTEM (10)
     LEFT JOIN "MusicArtist" MA ON M.ID = MA."musicId"
     LEFT JOIN "Singer" S ON ma."singerId" = S."id"
     LEFT JOIN "Album" AL ON M."albumId" = AL."id" 
-  WHERE
-    M."id" IN ( SELECT M."id" FROM "Music" M ORDER BY RANDOM( ) LIMIT 100 ) 
   ORDER BY
     M."id",
-    M."createdAt" DESC`
+    M."createdAt" DESC
+  LIMIT 100;`
   );
 };
 
