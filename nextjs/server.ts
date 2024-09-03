@@ -11,11 +11,11 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  const task = cron.schedule('* * * * *', async () => {
-    const isDev = process.env?.NODE_ENV === 'development';
-    !isDev && await downloadJob();
-  });
-  task.start();
+  // const task = cron.schedule('* * * * *', async () => {
+  //   const isDev = process.env?.NODE_ENV === 'development';
+  //   !isDev && await downloadJob();
+  // });
+  // task.start();
   const server = express();
   server.use('/files', fileRoutes);
   server.all('*', (req, res) => {
