@@ -7,10 +7,11 @@ async function processUpload(
   musics: { id: number; url: string }[]
 ) {
   const promises = musics.map(async (music) => {
-    const bucketName = process.env.MINIO_BUCKET_NAME!;
-    const fileName = path.basename(music.url);
+    const { MINIO_BUCKET_NAME } = process.env!;
+    const filePath = process.env.MUSIC_SAVE_PATH! + `/${music.url}`;
+    const fileName = path.basename(filePath);
     const objectName = 'data/' + fileName;
-    await minioClient.fPutObject(bucketName, objectName, music.url, {
+    await minioClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
       'Content-Type': 'audio/mpeg',
     });
     const updateResult = await prisma.music.update({
