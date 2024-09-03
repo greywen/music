@@ -36,10 +36,12 @@ export async function POST() {
 
   const musics = await prisma.music.findMany({
     select: { id: true, url: true },
-    where: { objectName: null },
+    where: { objectName: { equals: null } },
   });
 
-  processUpload(minioClient, musics);
+  console.log('musics count:', musics.length);
+
+  await processUpload(minioClient, musics);
 
   return Response.json({ message: 'ok' });
 }
