@@ -9,9 +9,10 @@ interface IRandomResult {
   coverId: number;
 }
 
-const random100 = async () => {
-  return await prisma.$queryRaw<IRandomResult[]>(
-    Prisma.sql`
+export async function GET() {
+  const random100 = async () => {
+    return await prisma.$queryRaw<IRandomResult[]>(
+      Prisma.sql`
   SELECT DISTINCT ON
     ( M."id" ) M."id",
     M."name" AS "name",
@@ -28,10 +29,8 @@ const random100 = async () => {
     M."id",
     M."createdAt" DESC
   LIMIT 100;`
-  );
-};
-
-export async function GET() {
+    );
+  };
   const data = await random100();
   return new Response(JSON.stringify(data));
 }
