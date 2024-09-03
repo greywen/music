@@ -20,6 +20,7 @@ model Music {
     lyricId     Int?
     br          Int           @db.SmallInt
     size        Int           @db.Integer
+    objectName  String?       @db.VarChar(100)
     createdAt   DateTime      @default(now())
     Favorite    Favorite?
     MusicArtist MusicArtist[]
