@@ -1,7 +1,7 @@
 import prisma from '@/prisma/prisma';
 import { Prisma } from '@prisma/client';
 
-interface ISearchResult {
+interface IRandomResult {
   id: number;
   name: string;
   singer: string;
@@ -10,7 +10,7 @@ interface ISearchResult {
 }
 
 const search = async () => {
-  return await prisma.$queryRaw<ISearchResult[]>(
+  return await prisma.$queryRaw<IRandomResult[]>(
     Prisma.sql`
   SELECT DISTINCT ON
     ( M."id" ) M."id",
