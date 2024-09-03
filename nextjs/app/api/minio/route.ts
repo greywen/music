@@ -1,4 +1,5 @@
 import prisma from '@/prisma/prisma';
+import { getFileNameAndExtension } from '@/utils/common';
 import { existsSync } from 'fs';
 import { Client } from 'minio';
 import * as path from 'path';
@@ -12,6 +13,7 @@ async function processUpload(
     const filePath = process.env.MUSIC_SAVE_PATH! + `/${music.url}`;
 
     const existFile = await existsSync(filePath);
+    const { extension } = getFileNameAndExtension(music.url);
     if (!existFile) {
       await prisma.musicArtist.deleteMany({ where: { musicId: music.id } });
       await prisma.music.delete({ where: { id: music.id } });
@@ -20,11 +22,8 @@ async function processUpload(
       return;
     }
 
-    const fileName = path.basename(filePath);
-    const objectName = 'data/' + fileName;
-    await minioClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
-      'Content-Type': 'audio/mpeg',
-    });
+    const objectName = `data/${music.id}.${extension}`;
+    await minioClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath);
     const updateResult = await prisma.music.update({
       data: { objectName },
       where: { id: music.id },
