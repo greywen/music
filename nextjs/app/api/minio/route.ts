@@ -2,7 +2,7 @@ import prisma from '@/prisma/prisma';
 import { getFileNameAndExtension } from '@/utils/common';
 import { existsSync } from 'fs';
 import { Client } from 'minio';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST() {
   const { MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_ENDPOINT } = process.env;
@@ -17,7 +17,7 @@ export async function POST() {
   const musics = await prisma.music.findMany({
     select: { id: true, url: true, lyricId: true },
     where: { filePath: { equals: null } },
-    orderBy: { id: 'asc' }
+    orderBy: { id: 'asc' },
   });
 
   console.log('musics count:', musics.length);
@@ -37,9 +37,10 @@ export async function POST() {
       }
 
       const { extension } = getFileNameAndExtension(music.url);
-      const objectName = `data/${uuid
-        .v4()
-        .replaceAll('-', '')}.${extension}`.toLocaleLowerCase();
+      const objectName = `data/${uuidv4().replaceAll(
+        '-',
+        ''
+      )}.${extension}`.toLocaleLowerCase();
       await minIOClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
         'Content-Type': 'audio/mpeg',
       });
