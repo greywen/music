@@ -12,5 +12,5 @@ export const search = (params: IMusicSearchParams) => {
 
 export const randomMusic = () => {
   const fetchService = useFetch();
-  return fetchService.get<IMusicSearchResult[]>(`/api/music/fuck`);
+  return fetchService.get<IMusicSearchResult[]>(`/api/music/randomly`);
 };
