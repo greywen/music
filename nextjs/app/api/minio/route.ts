@@ -1,4 +1,5 @@
 import prisma from '@/prisma/prisma';
+import { getFileNameAndExtension } from '@/utils/common';
 import { existsSync } from 'fs';
 import { Client } from 'minio';
 
@@ -10,6 +11,7 @@ async function uploadToMinIO(
   const promises = musics.map(async (music) => {
     try {
       const filePath = MUSIC_SAVE_PATH! + `/${music.url}`;
+      
       const existFile = await existsSync(filePath);
       if (!existFile) {
         await prisma.musicArtist.deleteMany({ where: { musicId: music.id } });
@@ -19,15 +21,16 @@ async function uploadToMinIO(
         return;
       }
 
-      const objectName = `data/${music.url}`;
+      const { extension } = getFileNameAndExtension(music.url);
+      const objectName = `data/${music.id}.${extension}`.toLocaleLowerCase();
       await minIOClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
         'Content-Type': 'audio/mpeg',
       });
-      const updateResult = await prisma.music.update({
+      const result = await prisma.music.update({
         data: { objectName },
         where: { id: music.id },
       });
-      console.log('Update', updateResult.name, updateResult.objectName);
+      console.log('Update', result.name, result.objectName);
     } catch (error) {
       console.error(`Error processing music ID ${music.id}:`, error);
     }
@@ -50,6 +53,7 @@ export async function POST() {
   const musics = await prisma.music.findMany({
     select: { id: true, url: true, lyricId: true },
     where: { objectName: { equals: null } },
+    orderBy: { id: 'asc' },
   });
 
   console.log('musics count:', musics.length);
