@@ -1,6 +1,5 @@
 'use client';
 import SearchBar from '@/components/SearchBar/SearchBar';
-import styles from './page.module.css';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayList from '@/components/PlayList/PlayList';
 import { useEffect, useState } from 'react';
