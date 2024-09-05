@@ -14,3 +14,8 @@ export const randomMusic = () => {
   const fetchService = useFetch();
   return fetchService.get<IMusicSearchResult[]>(`/api/music/randomly`);
 };
+
+export const getMusicPlayUrl = (id: number) => {
+  const fetchService = useFetch();
+  return fetchService.get<{ url: string }>(`/api/music/url?id=${id}`);
+};

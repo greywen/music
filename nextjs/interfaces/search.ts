@@ -9,5 +9,5 @@ export interface IMusicSearchResult {
   name: string;
   artist: string;
   album: string;
-  coverId: number;
+  coverUrl: string;
 }

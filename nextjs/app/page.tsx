@@ -38,7 +38,7 @@ export default function Home() {
         album: currentMusic.album,
         artwork: [
           {
-            src: '/files/cover?id=' + currentMusic.coverId,
+            src: currentMusic.coverUrl,
             sizes: '500x500',
             type: 'image/png',
           },
@@ -183,7 +183,10 @@ export default function Home() {
         onClear={handleClearSearch}
       />
       {searchList.length === 0 && (
-        <div className='flex justify-center mt-4 text-green-800' onClick={getRandomMusic}>
+        <div
+          className='flex justify-center mt-4 text-green-800'
+          onClick={getRandomMusic}
+        >
           随机音乐100首
         </div>
       )}

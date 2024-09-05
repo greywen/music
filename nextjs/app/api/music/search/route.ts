@@ -6,7 +6,7 @@ interface ISearchResult {
   name: string;
   artist: string;
   album: string;
-  coverId: number;
+  coverPath: number;
 }
 
 const searchByPaging = async (query: string, limit: number, offset: number) => {
@@ -27,16 +27,17 @@ const searchByPaging = async (query: string, limit: number, offset: number) => {
 		M."name" AS "name",
 		AA.artist,
 		AL."name" AS album,
-		AL."coverId" as "coverId"
+		C."filePath" as "coverPath"
 	FROM
 		"Music" M 
 		LEFT JOIN AllArtists AA ON M."id" = AA."musicId"
 		LEFT JOIN "Album" AL ON M."albumId" = AL."id"
+        LEFT JOIN "Cover" C ON C."id" = AL."coverId" 
 	WHERE
 		M."name" LIKE ${Prisma.join([`%${query}%`])}
 		OR AA.artist LIKE ${Prisma.join([`%${query}%`])}
 		OR AL."name" LIKE ${Prisma.join([`%${query}%`])} 
-	GROUP BY M."id", M.url, M."name", AA.artist, AL."name", AL."coverId"  
+	GROUP BY M."id", M.url, M."name", AA.artist, AL."name", C."filePath"
 	ORDER BY M."id", MAX ( M."createdAt" ) DESC 
 	LIMIT ${Prisma.join([limit])} OFFSET ${Prisma.join([offset])};`
     );
@@ -77,14 +78,29 @@ export async function GET(request: Request) {
   const query = searchParams.get('query');
   const pages = +(searchParams.get('pages') || 1);
   const pageSize = +(searchParams.get('count') || 20);
-  console.log(query, pages, pageSize);
+
   if (!query) {
     throw new Error('query is required');
   }
+
   const { data, count } = await searchByPaging(
     query,
     pageSize,
     (pages - 1) * pageSize
   );
-  return new Response(JSON.stringify({ data, count }));
+
+  const { MINIO_ENDPOINT, MINIO_BUCKET } = process.env;
+  const result = data.map((x) => {
+    return {
+      ...x,
+      coverUrl: `${MINIO_ENDPOINT}/${MINIO_BUCKET}/${x.coverPath}`,
+    };
+  });
+
+  return new Response(
+    JSON.stringify({
+      data: result,
+      count,
+    })
+  );
 }

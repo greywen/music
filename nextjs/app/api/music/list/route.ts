@@ -17,12 +17,13 @@ const search = async (query: string, limit: number, offset: number) => {
       	M."name" AS "name",
       	S."name" AS singer,
       	AL."name" AS album,
-        AL."coverId" AS "coverId" 
+        C."filePath" AS "coverPath" 
       FROM
       	"Music" M 
         LEFT JOIN "MusicArtist" MA ON M.ID = MA."musicId"
       	LEFT JOIN "Singer" S ON ma."singerId" = S."id"
       	LEFT JOIN "Album" AL ON M."albumId" = AL."id" 
+        LEFT JOIN "Cover" C ON C."id" = AL."coverId" 
       WHERE
       	M.NAME LIKE ${Prisma.join([`%${query}%`])}
       	OR S.NAME LIKE ${Prisma.join([`%${query}%`])}

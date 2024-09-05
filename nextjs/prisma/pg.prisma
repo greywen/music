@@ -14,11 +14,9 @@ model Music {
     id          Int           @id @default(autoincrement())
     mid         String        @unique @db.VarChar(50)
     sourceId    Int
-    url         String        @db.VarChar(255)
     name        String        @db.VarChar(50)
     albumId     Int?
     lyricId     Int?
-    br          Int           @db.SmallInt
     size        Int           @db.Integer
     filePath    String?       @db.VarChar(100)
     createdAt   DateTime      @default(now())
@@ -32,8 +30,16 @@ model Music {
 
 model Lyric {
     id    Int     @id @default(autoincrement())
-    text  String  @db.Text
+    lyric String  @db.Text
     Music Music[]
+}
+
+model Singer {
+    id          Int           @id @default(autoincrement())
+    name        String        @unique @db.VarChar(50)
+    picture     String?       @db.VarChar(200)
+    MusicArtist MusicArtist[]
+    Album       Album[]
 }
 
 model MusicArtist {
@@ -44,16 +50,6 @@ model MusicArtist {
     Singer   Singer @relation(fields: [singerId], references: [id])
 
     @@unique([musicId, singerId])
-}
-
-model Singer {
-    id          Int           @id @default(autoincrement())
-    mid         String?       @unique @db.VarChar(50)
-    name        String        @unique @db.VarChar(50)
-    picture     String?       @db.VarChar(200)
-    area        Int?          @db.SmallInt
-    MusicArtist MusicArtist[]
-    Album       Album[]
 }
 
 model Album {
@@ -69,15 +65,16 @@ model Album {
 }
 
 model Cover {
-    id    Int     @id @default(autoincrement())
-    url   String  @db.VarChar(50)
-    Album Album[]
+    id       Int     @id @default(autoincrement())
+    url      String  @db.VarChar(50)
+    filePath String? @db.VarChar(100)
+    Album    Album[]
 }
 
 model Favorite {
     id      Int   @id @default(autoincrement())
-    music   Music @relation(fields: [musicId], references: [id])
     musicId Int   @unique
+    music   Music @relation(fields: [musicId], references: [id])
 }
 
 model Job {

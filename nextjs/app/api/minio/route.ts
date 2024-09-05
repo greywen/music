@@ -5,52 +5,51 @@ import { Client } from 'minio';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST() {
-  const { MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_ENDPOINT } = process.env;
+  const { MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_ENDPOINT, MINIO_PORT } =
+    process.env;
 
   const minIOClient = new Client({
     endPoint: MINIO_ENDPOINT!,
-    useSSL: true,
+    useSSL: false,
     accessKey: MINIO_ACCESS_KEY!,
     secretKey: MINIO_SECRET_KEY!,
+    port: +MINIO_PORT!,
   });
 
-  const musics = await prisma.music.findMany({
-    select: { id: true, url: true, lyricId: true },
+  const covers = await prisma.cover.findMany({
+    select: { id: true, url: true },
     where: { filePath: { equals: null } },
     orderBy: { id: 'asc' },
   });
 
-  console.log('musics count:', musics.length);
+  console.log('covers count:', covers.length);
 
-  const { MINIO_BUCKET_NAME, MUSIC_SAVE_PATH } = process.env!;
-  for (const music of musics) {
+  const { MINIO_BUCKET_NAME, COVER_SAVE_PATH } = process.env!;
+  for (const cover of covers) {
     try {
-      const filePath = MUSIC_SAVE_PATH! + `/${music.url}`;
+      const filePath = COVER_SAVE_PATH! + `/${cover.url}`;
 
       const existFile = await existsSync(filePath);
       if (!existFile) {
-        await prisma.musicArtist.deleteMany({ where: { musicId: music.id } });
-        await prisma.music.delete({ where: { id: music.id } });
-        music.lyricId &&
-          (await prisma.lyric.delete({ where: { id: music.lyricId } }));
+        await prisma.cover.delete({ where: { id: cover.id } });
         return;
       }
 
-      const { extension } = getFileNameAndExtension(music.url);
-      const objectName = `data/${uuidv4().replaceAll(
+      const { extension } = getFileNameAndExtension(cover.url);
+      const objectName = `cover/${uuidv4().replaceAll(
         '-',
         ''
       )}.${extension}`.toLocaleLowerCase();
       await minIOClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
-        'Content-Type': 'audio/mpeg',
+        'Content-Type': 'image/' + extension,
       });
-      const result = await prisma.music.update({
+      const result = await prisma.cover.update({
         data: { filePath: objectName },
-        where: { id: music.id },
+        where: { id: cover.id },
       });
-      console.log('Update', result.name, result.filePath);
+      console.log('Update', result.url, result.filePath);
     } catch (error) {
-      console.error(`Error processing music ID ${music.id}:`, error);
+      console.error(`Error processing cover ID ${cover.id}:`, error);
     }
   }
   return Response.json({ message: 'ok' });

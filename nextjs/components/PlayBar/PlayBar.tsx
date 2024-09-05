@@ -12,19 +12,10 @@ type Props = {
   onPause?: () => void;
   onNext?: () => void;
   onClickLeft?: () => void;
-  onDoubleClick?: () => void;
 };
 
 const PlayBar = (props: Props) => {
-  const {
-    music,
-    playing,
-    onPlay,
-    onPause,
-    onNext,
-    onClickLeft,
-    onDoubleClick,
-  } = props;
+  const { music, playing, onPlay, onPause, onNext, onClickLeft } = props;
 
   function handlePlay() {
     music && onPlay && onPlay();
@@ -52,11 +43,7 @@ const PlayBar = (props: Props) => {
         >
           <Image
             alt=''
-            src={
-              music
-                ? `http://127.0.0.1:3000/files/cover?id=${music.coverId}`
-                : '/images/music.jpg'
-            }
+            src={music ? music.coverUrl : '/images/music.jpg'}
             width={40}
             height={40}
             className='rounded-md'

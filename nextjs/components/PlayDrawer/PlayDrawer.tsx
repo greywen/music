@@ -2,12 +2,14 @@
 import Image from 'next/image';
 import { IMusicSearchResult } from '@/interfaces/search';
 import { Drawer } from 'vaul';
-import StarIcon from '../Icons/StarIcon';
-import MoreIcon from '../Icons/MoreIcon';
-import PrevIcon from '../Icons/PrevIcon';
-import PauseIcon from '../Icons/PauseIcon';
-import NextIcon from '../Icons/NextIcon';
-import PlayIcon from '../Icons/PlayIcon';
+import {
+  StarIcon,
+  MoreIcon,
+  PrevIcon,
+  PauseIcon,
+  NextIcon,
+  PlayIcon,
+} from '../Icons';
 
 interface IProps {
   playing: boolean;
@@ -54,12 +56,14 @@ const PlayDrawer = (props: IProps) => {
             <div className='mx-auto mt-4 h-2 w-24 rounded-full bg-[#f6f8ff]'></div>
             <div className='h-7 w-full'></div>
             <div
-              className={`px-8 py-6 flex justify-center items-center h-[350px] ${playing ? 'play-drawer-cover-playing' : ''}`}
+              className={`px-8 py-6 flex justify-center items-center h-[350px] ${
+                playing ? 'play-drawer-cover-playing' : ''
+              }`}
               onClick={handlePlay}
             >
               <Image
                 alt=''
-                src={'http://127.0.0.1:3000/files/cover?id=' + music.coverId}
+                src={music.coverUrl}
                 width={230}
                 height={230}
                 className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
@@ -67,7 +71,9 @@ const PlayDrawer = (props: IProps) => {
             </div>
             <div className='px-8 w-full flex items-center'>
               <div className='w-3/4'>
-                <div className='font-semibold text-xl truncate w-44'>{music.name}</div>
+                <div className='font-semibold text-xl truncate w-44'>
+                  {music.name}
+                </div>
                 <div className='block w-44 truncate text-sm text-[#777]'>
                   {`${music.artist} - ${music.name}`}
                 </div>
