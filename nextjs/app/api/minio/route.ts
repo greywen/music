@@ -33,22 +33,21 @@ export async function POST() {
       const existFile = await existsSync(filePath);
       if (!existFile) {
         await prisma.cover.delete({ where: { id: cover.id } });
-        return;
+      } else {
+        const { extension } = getFileNameAndExtension(cover.url);
+        const objectName = `cover/${uuidv4().replaceAll(
+          '-',
+          ''
+        )}.${extension}`.toLocaleLowerCase();
+        await minIOClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
+          'Content-Type': 'image/' + extension,
+        });
+        const result = await prisma.cover.update({
+          data: { filePath: objectName },
+          where: { id: cover.id },
+        });
+        console.log('Update', result.url, result.filePath);
       }
-
-      const { extension } = getFileNameAndExtension(cover.url);
-      const objectName = `cover/${uuidv4().replaceAll(
-        '-',
-        ''
-      )}.${extension}`.toLocaleLowerCase();
-      await minIOClient.fPutObject(MINIO_BUCKET_NAME!, objectName, filePath, {
-        'Content-Type': 'image/' + extension,
-      });
-      const result = await prisma.cover.update({
-        data: { filePath: objectName },
-        where: { id: cover.id },
-      });
-      console.log('Update', result.url, result.filePath);
     } catch (error) {
       console.error(`Error processing cover ID ${cover.id}:`, error);
     }
