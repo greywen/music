@@ -31,5 +31,5 @@ const search = async () => {
 
 export async function GET() {
   // const data = await search();
-  // return Response.json(data);
+  return Response.json({ message: 'ok' });
 }
