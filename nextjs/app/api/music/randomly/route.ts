@@ -1,7 +1,7 @@
 import prisma from '@/prisma/prisma';
 import { getFilePublicUrl } from '@/utils/minio';
 import { Prisma } from '@prisma/client';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface IRandomResult {
   id: number;
@@ -11,7 +11,7 @@ interface IRandomResult {
   coverPath: string;
 }
 
-const search = async () => {
+const search = async (limit: number = 100) => {
   return await prisma.$queryRaw<IRandomResult[]>(
     Prisma.sql`WITH AllArtists AS (
 	    SELECT
@@ -34,12 +34,19 @@ const search = async () => {
 	    	LEFT JOIN "Album" AL ON M."albumId" = AL."id"
         LEFT JOIN "Cover" C ON C."id" = AL."coverId" 
 	    WHERE
-          M."id" IN ( SELECT M."id" FROM "Music" M TABLESAMPLE SYSTEM (10) LIMIT 100 ) 
+          M."id" IN ( SELECT M."id" FROM "Music" M TABLESAMPLE SYSTEM (10) LIMIT ${Prisma.join(
+            [limit]
+          )} ) 
 	    GROUP BY M."id", M."name", AA.artist, AL."name", C."filePath";`
   );
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const limit = +(searchParams.get('count') || 0);
+  if (!limit) {
+    return [];
+  }
   const data = await search();
   const result = data.map((x) => {
     return {
