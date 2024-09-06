@@ -3,5 +3,5 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const singermid = searchParams.get('singermid');
   const data = await qqMusic.api('/singer/desc', { singermid });
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

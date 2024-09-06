@@ -6,5 +6,5 @@ export async function GET(request: Request) {
   const period = searchParams.get('period');
 
   const data = await qqMusic.api('/top', { id, pageSize, period });
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

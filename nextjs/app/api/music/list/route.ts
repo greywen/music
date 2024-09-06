@@ -44,5 +44,5 @@ export async function GET(request: Request) {
     throw new Error('query is required');
   }
   const data = await search(query, count, pages - 1);
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

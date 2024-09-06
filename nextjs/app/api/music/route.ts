@@ -40,5 +40,5 @@ export async function GET(request: Request) {
   }
 
   const data = await search(id);
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

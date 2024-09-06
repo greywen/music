@@ -28,5 +28,5 @@ export async function GET(request: Request) {
     bucketName,
     music!.filePath!
   );
-  return new Response(JSON.stringify({ url }));
+  return Response.json({ url });
 }

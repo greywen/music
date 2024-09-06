@@ -5,5 +5,5 @@ export async function GET(request: Request) {
   const num = +(searchParams.get('num') || 100);
   const page = +(searchParams.get('page') || 1);
   const data = await qqMusic.api('/singer/songs', { singermid, num, page });
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

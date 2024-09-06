@@ -97,10 +97,8 @@ export async function GET(request: Request) {
     };
   });
 
-  return new Response(
-    JSON.stringify({
-      data: result,
-      count,
-    })
-  );
+  return Response.json({
+    data: result,
+    count,
+  });
 }

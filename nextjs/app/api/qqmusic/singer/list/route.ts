@@ -6,5 +6,5 @@ export async function GET(request: Request) {
   const index = +(searchParams.get('index') || -100);
   const sex = +(searchParams.get('sex') || -100);
   const data = await qqMusic.api('/singer/list', { area, genre, index, sex });
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }

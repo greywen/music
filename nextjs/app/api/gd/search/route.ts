@@ -13,5 +13,5 @@ export async function GET(request: Request) {
   }
 
   const data = await getMusicList({ name, source, count, pages });
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 }
