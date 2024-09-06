@@ -14,7 +14,7 @@ router.use('/music', async (req, res) => {
 
   const savePath = process.env.MUSIC_SAVE_PATH!;
   const music = await prisma.music.findUnique({ where: { id } });
-  const filePath = path.resolve(savePath, music?.url!);
+  const filePath = path.resolve(savePath, music?.filePath!);
 
   if (await fs.existsSync(filePath)) {
     res.sendFile(filePath);

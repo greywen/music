@@ -116,11 +116,11 @@ async function createArtist(tx: ITx, musicId: number, singerId: number) {
 }
 
 async function createLyric(tx: ITx, text: string) {
-  return await tx.lyric.create({ data: { text } });
+  return await tx.lyric.create({ data: { lyric: text } });
 }
 
 async function createMusic(tx: ITx, params: ICreateMusic) {
-  const { mid, sourceId, name, albumId, lyricId, url, br, size } = params;
+  const { mid, sourceId, name, albumId, lyricId, size } = params;
   return await tx.music.create({
     data: {
       mid,
@@ -128,8 +128,6 @@ async function createMusic(tx: ITx, params: ICreateMusic) {
       name,
       albumId,
       lyricId,
-      url,
-      br,
       size,
     },
   });
