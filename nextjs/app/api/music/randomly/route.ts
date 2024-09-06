@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const limit = +(searchParams.get('count') || 0);
   if (!limit) {
-    return [];
+    return NextResponse.json([]);
   }
   const data = await search();
   const result = data.map((x) => {
