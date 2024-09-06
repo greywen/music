@@ -30,6 +30,6 @@ const search = async () => {
 };
 
 export async function GET() {
-  const data = await search();
-  return Response.json(data);
+  // const data = await search();
+  // return Response.json(data);
 }
