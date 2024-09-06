@@ -1,5 +1,5 @@
 import prisma from '@/prisma/prisma';
-import { presignedGetObject } from '@/utils/minioClient';
+import minIOClient from '@/utils/minioClient';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,6 +13,6 @@ export async function GET(request: Request) {
   }
 
   const bucketName = process.env.MINIO_BUCKET_NAME!;
-  const url = await presignedGetObject(bucketName, music!.filePath!);
+  const url = await minIOClient.presignedGetObject(bucketName, music!.filePath!);
   return new Response(JSON.stringify({ url }));
 }
