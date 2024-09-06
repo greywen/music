@@ -1,7 +1,8 @@
 import { Source } from '@/interfaces/music';
 import { getMusicList } from '@/service/music';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get('name');
   const source = (searchParams.get('source') || 'tencent') as Source;
@@ -13,5 +14,5 @@ export async function GET(request: Request) {
   }
 
   const data = await getMusicList({ name, source, count, pages });
-  return Response.json(data);
+  return NextResponse.json(data);
 }

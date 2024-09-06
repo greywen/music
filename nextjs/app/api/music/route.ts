@@ -1,5 +1,6 @@
 import prisma from '@/prisma/prisma';
 import { Prisma } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface ISearchResult {
   id: number;
@@ -31,7 +32,7 @@ const search = async (id: number) => {
   );
 };
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = +(searchParams.get('id') || 0);
 
@@ -40,5 +41,5 @@ export async function GET(request: Request) {
   }
 
   const data = await search(id);
-  return Response.json(data);
+  return NextResponse.json(data);
 }

@@ -2,6 +2,7 @@ import prisma from '@/prisma/prisma';
 import { getFileNameAndExtension } from '@/utils/common';
 import { existsSync } from 'fs';
 import { Client } from 'minio';
+import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST() {
@@ -52,5 +53,5 @@ export async function POST() {
       console.error(`Error processing cover ID ${cover.id}:`, error);
     }
   }
-  return Response.json({ message: 'ok' });
+  return NextResponse.json({ message: 'ok' });
 }

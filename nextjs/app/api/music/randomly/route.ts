@@ -1,4 +1,5 @@
 import prisma from '@/prisma/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface IRandomResult {
   id: number;
@@ -31,5 +32,5 @@ const search = async () => {
 
 export async function GET() {
   // const data = await search();
-  return Response.json({ message: 'ok' });
+  return NextResponse.json({ message: 'ok' });
 }

@@ -1,8 +1,9 @@
 import { Source } from '@/interfaces/music';
 import { getMusicList } from '@/service/music';
 import downloadMusic from '@/utils/downloadMusic';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const {
     query,
     count = 20,
@@ -17,5 +18,5 @@ export async function POST(request: Request) {
     throw new Error('query is required');
   }
   const musicList = await getMusicList({ name: query, count, source });
-  return Response.json(await downloadMusic(musicList));
+  return NextResponse.json(await downloadMusic(musicList));
 }

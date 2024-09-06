@@ -1,5 +1,6 @@
 import prisma from '@/prisma/prisma';
 import { Prisma } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface ISearchResult {
   id: number;
@@ -73,7 +74,7 @@ const searchByPaging = async (query: string, limit: number, offset: number) => {
   });
 };
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('query');
   const pages = +(searchParams.get('pages') || 1);
@@ -97,7 +98,7 @@ export async function GET(request: Request) {
     };
   });
 
-  return Response.json({
+  return NextResponse.json({
     data: result,
     count,
   });

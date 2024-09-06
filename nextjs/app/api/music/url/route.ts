@@ -1,7 +1,8 @@
 import prisma from '@/prisma/prisma';
 import { Client } from 'minio';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = +(searchParams.get('id') || 0);
   const mid = searchParams.get('mid');
@@ -28,5 +29,5 @@ export async function GET(request: Request) {
     bucketName,
     music!.filePath!
   );
-  return Response.json({ url });
+  return NextResponse.json({ url });
 }
