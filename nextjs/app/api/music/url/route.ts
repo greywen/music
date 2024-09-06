@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   const minIOClient = new Client({
     endPoint: MINIO_ENDPOINT!,
-    useSSL: false,
+    useSSL: true,
     accessKey: MINIO_ACCESS_KEY!,
     secretKey: MINIO_SECRET_KEY!,
     port: +MINIO_PORT!,

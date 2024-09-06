@@ -5,7 +5,7 @@ import PlayList from '@/components/PlayList/PlayList';
 import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
-import { randomMusic, search } from '@/apis/musicApi';
+import { getMusicPlayUrl, randomMusic, search } from '@/apis/musicApi';
 import { IMusicSearchParams, IMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
@@ -67,35 +67,37 @@ export default function Home() {
   useEffect(() => {
     if (currentMusic) {
       howler?.unload();
-      howler = new Howl({
-        src: 'files/music?id=' + currentMusic.id,
-        format: ['mp3'],
-        html5: true,
-      });
+      getMusicPlayUrl(currentMusic.id).then((data) => {
+        howler = new Howl({
+          src: data.url,
+          format: ['mp3'],
+          html5: true,
+        });
 
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.setActionHandler('play', function () {
-          howler.play();
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.setActionHandler('play', function () {
+            howler.play();
+          });
+          navigator.mediaSession.setActionHandler('pause', function () {
+            howler.pause();
+          });
+          navigator.mediaSession.setActionHandler('previoustrack', function () {
+            prevMusic();
+          });
+          navigator.mediaSession.setActionHandler('nexttrack', function () {
+            nextMusic();
+          });
+        }
+
+        howler.on('load', () => {
+          setMetadata();
+          handlePlay();
         });
-        navigator.mediaSession.setActionHandler('pause', function () {
-          howler.pause();
-        });
-        navigator.mediaSession.setActionHandler('previoustrack', function () {
-          prevMusic();
-        });
-        navigator.mediaSession.setActionHandler('nexttrack', function () {
+
+        howler.on('end', () => {
+          setPlaying(false);
           nextMusic();
         });
-      }
-
-      howler.on('load', () => {
-        setMetadata();
-        handlePlay();
-      });
-
-      howler.on('end', () => {
-        setPlaying(false);
-        nextMusic();
       });
     }
   }, [currentMusic]);

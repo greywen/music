@@ -40,14 +40,12 @@ interface ICreateMusic {
 async function downloadMusic(music: IMusic) {
   console.time('download music');
   const { id, source, name, artist } = music;
-  const musicSavePath = process.env.MUSIC_SAVE_PATH!;
-  await createFolder(musicSavePath);
   const musicInfo = await getMusicInfo({ id, source, br: 320 });
   console.log('music url: \n', musicInfo.url);
   const musicName = `${artist.join()} - ${name}${getUrlExtension(
     musicInfo.url
   )}`;
-  const musicPath = `${musicSavePath}/${musicName}`;
+  const musicPath = `/${musicName}`;
   await downloadFile({
     url: musicInfo.url,
     filePath: musicPath,
@@ -59,13 +57,11 @@ async function downloadMusic(music: IMusic) {
 async function downloadCover(music: IMusic) {
   console.time('download cover');
   const { id, source, pic_id } = music;
-  const coverSavePath = process.env.COVER_SAVE_PATH!;
-  await createFolder(coverSavePath);
   const cover = await getCover({ id: pic_id, source, size: 500 });
   console.log('cover url: \n', cover?.url);
   if (!cover?.url) return undefined;
   const coverName = `${id}${getUrlExtension(cover.url)}`;
-  const coverPath = `${coverSavePath}/${coverName}`;
+  const coverPath = `${coverName}`;
   await downloadFile({
     url: cover.url,
     filePath: coverPath,

@@ -1,4 +1,5 @@
 import prisma from '@/prisma/prisma';
+import { getFilePublicUrl } from '@/utils/minio';
 import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,7 +8,7 @@ interface ISearchResult {
   name: string;
   artist: string;
   album: string;
-  coverPath: number;
+  coverPath: string;
 }
 
 const searchByPaging = async (query: string, limit: number, offset: number) => {
@@ -38,7 +39,7 @@ const searchByPaging = async (query: string, limit: number, offset: number) => {
 		M."name" LIKE ${Prisma.join([`%${query}%`])}
 		OR AA.artist LIKE ${Prisma.join([`%${query}%`])}
 		OR AL."name" LIKE ${Prisma.join([`%${query}%`])} 
-	GROUP BY M."id", M.url, M."name", AA.artist, AL."name", C."filePath"
+	GROUP BY M."id", M."name", AA.artist, AL."name", C."filePath"
 	ORDER BY M."id", MAX ( M."createdAt" ) DESC 
 	LIMIT ${Prisma.join([limit])} OFFSET ${Prisma.join([offset])};`
     );
@@ -90,11 +91,10 @@ export async function GET(request: NextRequest) {
     (pages - 1) * pageSize
   );
 
-  const { MINIO_ENDPOINT, MINIO_BUCKET } = process.env;
   const result = data.map((x) => {
     return {
       ...x,
-      coverUrl: `${MINIO_ENDPOINT}/${MINIO_BUCKET}/${x.coverPath}`,
+      coverUrl: getFilePublicUrl(x.coverPath),
     };
   });
 

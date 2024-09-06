@@ -13,14 +13,9 @@ const withPWA = nextPWA({
 const nextConfig = {
     images: {
         remotePatterns: [
-            {
+            { 
                 protocol: 'https',
                 hostname: 'io.doubleu.work',
-                pathname: '**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'doubleu.work',
                 pathname: '**',
             },
         ],

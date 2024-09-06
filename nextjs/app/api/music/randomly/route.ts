@@ -1,12 +1,13 @@
 import prisma from '@/prisma/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { getFilePublicUrl } from '@/utils/minio';
+import { NextResponse } from 'next/server';
 
 interface IRandomResult {
   id: number;
   name: string;
-  singer: string;
+  artist: string;
   album: string;
-  coverPath: number;
+  coverPath: string;
 }
 
 const search = async () => {
@@ -14,7 +15,7 @@ const search = async () => {
     SELECT DISTINCT ON
       ( M."id" ) M."id",
       M."name" AS "name",
-      S."name" AS singer,
+      S."name" AS "artist",
       AL."name" AS album,
       C."filePath" AS "coverPath" 
     FROM
@@ -31,6 +32,12 @@ const search = async () => {
 };
 
 export async function GET() {
-  // const data = await search();
-  return NextResponse.json({ message: 'ok' });
+  const data = await search();
+  const result = data.map((x) => {
+    return {
+      ...x,
+      coverUrl: getFilePublicUrl(x.coverPath),
+    };
+  });
+  return NextResponse.json(result);
 }
