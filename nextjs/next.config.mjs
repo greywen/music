@@ -15,7 +15,7 @@ const nextConfig = {
         remotePatterns: [
             { 
                 protocol: 'https',
-                hostname: 'io.doubleu.work',
+                hostname: 'io.anhejin.cn',
                 pathname: '**',
             },
         ],

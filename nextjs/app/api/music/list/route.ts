@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 interface ISearchResult {
   id: number;
   name: string;
+  lyricId: number;
   singer: string;
   album: string;
   coverId: number;
@@ -16,6 +17,7 @@ const search = async (query: string, limit: number, offset: number) => {
       SELECT DISTINCT ON
       	( M."id" ) M."id",
       	M."name" AS "name",
+				M."lyricId" AS "lyricId",
       	S."name" AS singer,
       	AL."name" AS album,
         C."filePath" AS "coverPath" 

@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { IMusicSearchResult } from '@/interfaces/search';
+import { IGetMusicSearchResult } from '@/interfaces/search';
 import { Drawer } from 'vaul';
 import {
   StarIcon,
@@ -10,10 +10,11 @@ import {
   NextIcon,
   PlayIcon,
 } from '../Icons';
+import Lyric from '../Lyric/Lyric';
 
 interface IProps {
   playing: boolean;
-  music: IMusicSearchResult;
+  music: IGetMusicSearchResult;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onPlay: () => void;
@@ -61,13 +62,14 @@ const PlayDrawer = (props: IProps) => {
               }`}
               onClick={handlePlay}
             >
-              <Image
+              <Lyric id={music.lyricId} />
+              {/* <Image
                 alt=''
                 src={music.coverUrl}
                 width={230}
                 height={230}
                 className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
-              />
+              /> */}
             </div>
             <div className='px-8 w-full flex items-center'>
               <div className='w-3/4'>

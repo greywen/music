@@ -3,10 +3,10 @@ import Image from 'next/image';
 import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
-import { IMusicSearchResult } from '@/interfaces/search';
+import { IGetMusicSearchResult } from '@/interfaces/search';
 
 type Props = {
-  music?: IMusicSearchResult | null;
+  music?: IGetMusicSearchResult | null;
   playing?: boolean;
   onPlay?: () => void;
   onPause?: () => void;

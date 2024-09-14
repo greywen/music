@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { getMusicPlayUrl, randomMusic, search } from '@/apis/musicApi';
-import { IMusicSearchParams, IMusicSearchResult } from '@/interfaces/search';
+import { IMusicSearchParams, IGetMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
 
@@ -16,9 +16,9 @@ export default function Home() {
   const [searchParams, setSearchParams] =
     useState<IMusicSearchParams>(initSearchParams);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchList, setSearchList] = useState<IMusicSearchResult[]>([]);
-  const [playList, setPlayList] = useState<IMusicSearchResult[]>([]);
-  const [currentMusic, setCurrentMusic] = useState<IMusicSearchResult | null>(
+  const [searchList, setSearchList] = useState<IGetMusicSearchResult[]>([]);
+  const [playList, setPlayList] = useState<IGetMusicSearchResult[]>([]);
+  const [currentMusic, setCurrentMusic] = useState<IGetMusicSearchResult | null>(
     null
   );
   const [searchLoading, setSearchLoading] = useState<boolean>(false);

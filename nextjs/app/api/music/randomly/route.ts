@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 interface IRandomResult {
   id: number;
   name: string;
+  lyricId: number;
   artist: string;
   album: string;
   coverPath: string;
@@ -25,6 +26,7 @@ const search = async (limit: number = 100) => {
 	    	) SELECT M
 	    	."id",
 	    	M."name" AS "name",
+				M."lyricId" AS "lyricId",
 	    	AA.artist,
 	    	AL."name" AS album,
 	    	C."filePath" as "coverPath"
@@ -33,8 +35,9 @@ const search = async (limit: number = 100) => {
 	    	LEFT JOIN AllArtists AA ON M."id" = AA."musicId"
 	    	LEFT JOIN "Album" AL ON M."albumId" = AL."id"
         LEFT JOIN "Cover" C ON C."id" = AL."coverId" 
-	    WHERE
-          M."id" IN ( SELECT M."id" FROM "Music" M TABLESAMPLE SYSTEM (10) LIMIT ${Prisma.join(
+	      LEFT JOIN "Lyric" L ON L."id" = M."lyricId" 
+        WHERE
+          M."id" IN ( SELECT M."id" FROM "Music" M ORDER BY RANDOM() LIMIT ${Prisma.join(
             [limit]
           )} ) 
 	    GROUP BY M."id", M."name", AA.artist, AL."name", C."filePath";`

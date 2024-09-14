@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 interface ISearchResult {
   id: number;
   name: string;
+  lyricId: number;
   artist: string;
   album: string;
   coverPath: string;
@@ -27,6 +28,7 @@ const searchByPaging = async (query: string, limit: number, offset: number) => {
 		) SELECT M
 		."id",
 		M."name" AS "name",
+		M."lyricId" AS "lyricId",
 		AA.artist,
 		AL."name" AS album,
 		C."filePath" as "coverPath"
