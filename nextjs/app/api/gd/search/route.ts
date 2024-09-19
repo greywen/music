@@ -1,5 +1,5 @@
 import { Source } from '@/interfaces/music';
-import { getMusicList } from '@/service/music';
+import { getMusicList } from '@/services/music';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {

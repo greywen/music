@@ -10,23 +10,10 @@ import { IMusicSearchParams, IGetMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
+import { PlayStatus } from '@/constants/common';
+import { HomeContext, InitialState } from '@/contexts/HomeContext';
 
-export enum PlayStatus {
-  playing = 1,
-  paused = 2,
-  ended = 3,
-  waiting = 4,
-  error = 5,
-  none = 6,
-}
-
-interface InitialState {
-  howler?: Howl;
-  currentMusic?: IGetMusicSearchResult;
-  playList: IGetMusicSearchResult[];
-  playStatus: PlayStatus;
-  seek: number;
-}
+let playInterval: NodeJS.Timeout;
 
 const initialState: InitialState = {
   howler: undefined,
@@ -35,13 +22,6 @@ const initialState: InitialState = {
   playStatus: PlayStatus.none,
   seek: 0,
 };
-
-interface ContextProps {
-  state: InitialState;
-}
-
-const HomeContext = createContext<ContextProps>(undefined!);
-let playInterval: NodeJS.Timeout;
 
 export default function Home() {
   const contextValue = useCreateReducer<InitialState>({
@@ -294,5 +274,3 @@ export default function Home() {
     </HomeContext.Provider>
   );
 }
-
-export { HomeContext };

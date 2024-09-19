@@ -1,7 +1,7 @@
 import { SOURCE_ID } from '../constants/common';
 import { IMusic } from '../interfaces/music';
 import prisma from '../prisma/prisma';
-import { getCover, getLyric, getMusicInfo } from '../service/music';
+import { getCover, getLyric, getMusicInfo } from '../services/music';
 import createFolder from '../utils/createFolder';
 import { downloadFile, getUrlExtension } from '../utils/downloadFile';
 import { Prisma, PrismaClient } from '@prisma/client';

@@ -1,5 +1,5 @@
 import { Source } from '@/interfaces/music';
-import { getMusicList } from '@/service/music';
+import { getMusicList } from '@/services/music';
 import downloadMusic from '@/utils/downloadMusic';
 import { NextRequest, NextResponse } from 'next/server';
 

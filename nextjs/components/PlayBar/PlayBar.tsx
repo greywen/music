@@ -4,7 +4,8 @@ import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
 import { useContext } from 'react';
-import { HomeContext, PlayStatus } from '@/app/page';
+import { PlayStatus } from '@/constants/common';
+import { HomeContext } from '@/contexts/HomeContext';
 
 type Props = {
   onPlay?: () => void;

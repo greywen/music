@@ -1,5 +1,5 @@
 import { getMusicLyric } from '@/apis/musicApi';
-import { HomeContext } from '@/app/page';
+import { HomeContext } from '@/contexts/HomeContext';
 import { IGetLyricResult } from '@/interfaces/lyric';
 import { useContext, useEffect, useRef, useState } from 'react';
 

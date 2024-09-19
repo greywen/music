@@ -11,7 +11,8 @@ import {
 } from '../Icons';
 import Lyric from '../Lyric/Lyric';
 import { useContext, useState } from 'react';
-import { HomeContext, PlayStatus } from '@/app/page';
+import { PlayStatus } from '@/constants/common';
+import { HomeContext } from '@/contexts/HomeContext';
 
 interface IProps {
   open: boolean;
