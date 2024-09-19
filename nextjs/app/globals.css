@@ -35,6 +35,11 @@ body {
     background: #555;
 }
 
+.transparent-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #f6f8ff #f6f8ff;
+}
+
 * {
     box-sizing: border-box;
 }

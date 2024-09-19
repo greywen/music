@@ -14,7 +14,7 @@ const PlayListItem = (props: Props) => {
         <div className='flex font-normal text-base whitespace-nowrap overflow-hidden text-ellipsis'>
           {title}
         </div>
-        <span className='block font-light text-[12px] whitespace-nowrap overflow-hidden text-ellipsis text-gray-500'>
+        <span className='block w-48 font-light text-[12px] whitespace-nowrap overflow-hidden text-ellipsis text-gray-500'>
           {description}
         </span>
       </div>

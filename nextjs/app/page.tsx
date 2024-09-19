@@ -2,28 +2,62 @@
 import SearchBar from '@/components/SearchBar/SearchBar';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayList from '@/components/PlayList/PlayList';
-import { useEffect, useState } from 'react';
+import { createContext, MutableRefObject, useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { getMusicPlayUrl, randomMusic, search } from '@/apis/musicApi';
 import { IMusicSearchParams, IGetMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
+import { useCreateReducer } from '@/hooks/useCreateReducer';
 
-let howler: Howl;
+export enum PlayStatus {
+  playing = 1,
+  paused = 2,
+  ended = 3,
+  waiting = 4,
+  error = 5,
+  none = 6,
+}
+
+interface InitialState {
+  howler?: Howl;
+  currentMusic?: IGetMusicSearchResult;
+  playList: IGetMusicSearchResult[];
+  playStatus: PlayStatus;
+  seek: number;
+}
+
+const initialState: InitialState = {
+  howler: undefined,
+  currentMusic: undefined,
+  playList: [],
+  playStatus: PlayStatus.none,
+  seek: 0,
+};
+
+interface ContextProps {
+  state: InitialState;
+}
+
+const HomeContext = createContext<ContextProps>(undefined!);
+let playInterval: NodeJS.Timeout;
+
 export default function Home() {
+  const contextValue = useCreateReducer<InitialState>({
+    initialState,
+  });
+  const {
+    state: { howler, currentMusic, playList },
+    dispatch,
+  } = contextValue;
+
   const initSearchParams = { query: '', pages: 1, count: 50 };
   const [searchParams, setSearchParams] =
     useState<IMusicSearchParams>(initSearchParams);
   const [totalCount, setTotalCount] = useState(0);
   const [searchList, setSearchList] = useState<IGetMusicSearchResult[]>([]);
-  const [playList, setPlayList] = useState<IGetMusicSearchResult[]>([]);
-  const [currentMusic, setCurrentMusic] = useState<IGetMusicSearchResult | null>(
-    null
-  );
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
-  const [playLoading, setPlayLoading] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(false);
   const [playDrawerOpen, setPlayDrawer] = useState<boolean>(false);
 
   function handleClearSearch() {
@@ -48,6 +82,7 @@ export default function Home() {
   }
 
   function nextMusic() {
+    setPlayStatus(PlayStatus.waiting);
     const index = playList.findIndex((x) => x.id === currentMusic!.id);
     const playListCount = playList.length;
     if (index >= 0 && index < playListCount - 1) {
@@ -64,22 +99,69 @@ export default function Home() {
     }
   }
 
+  function playMusic() {
+    console.log('howler', howler);
+    howler?.play();
+    setPlayStatus(PlayStatus.playing);
+  }
+
+  function pauseMusic() {
+    howler?.pause();
+    clearPlayInterval();
+    setPlayStatus(PlayStatus.paused);
+  }
+
+  function setPlayStatus(value: PlayStatus) {
+    dispatch({ field: 'playStatus', value });
+  }
+
+  function setCurrentMusic(value: IGetMusicSearchResult) {
+    dispatch({ field: 'currentMusic', value });
+  }
+
+  function setPlayList(value: IGetMusicSearchResult[]) {
+    dispatch({ field: 'playList', value });
+  }
+
+  function unloadMusic() {
+    clearPlayInterval();
+    howler?.unload();
+  }
+
+  function clearPlayInterval() {
+    playInterval && clearInterval(playInterval);
+  }
+
+  useEffect(() => {
+    if (howler) {
+      howler.play();
+      setPlayStatus(PlayStatus.playing);
+    }
+  }, [howler]);
+
   useEffect(() => {
     if (currentMusic) {
-      howler?.unload();
+      unloadMusic();
       getMusicPlayUrl(currentMusic.id).then((data) => {
-        howler = new Howl({
+        let _howler = new Howl({
           src: data.url,
           format: ['mp3'],
           html5: true,
+          autoplay: false,
+          onplay: function () {
+            playInterval = setInterval(function () {
+              dispatch({ field: 'seek', value: _howler.seek() });
+            }, 100);
+          },
         });
+        dispatch({ field: 'howler', value: _howler });
 
         if ('mediaSession' in navigator) {
           navigator.mediaSession.setActionHandler('play', function () {
-            howler.play();
+            playMusic();
           });
           navigator.mediaSession.setActionHandler('pause', function () {
-            howler.pause();
+            pauseMusic();
           });
           navigator.mediaSession.setActionHandler('previoustrack', function () {
             prevMusic();
@@ -89,13 +171,11 @@ export default function Home() {
           });
         }
 
-        howler.on('load', () => {
+        _howler.on('load', function () {
           setMetadata();
-          handlePlay();
         });
 
-        howler.on('end', () => {
-          setPlaying(false);
+        _howler.on('end', () => {
           nextMusic();
         });
       });
@@ -132,7 +212,7 @@ export default function Home() {
     await sendSearch(params, false);
   }
 
-  function handlePlaySingle(musicId: number) {
+  function handlePlayList(musicId: number) {
     let music = searchList.find((x) => x.id === musicId);
     if (music) {
       setPlayList(searchList);
@@ -145,13 +225,11 @@ export default function Home() {
   }
 
   function handlePause() {
-    setPlaying(false);
-    howler.pause();
+    pauseMusic();
   }
 
   function handlePlay() {
-    setPlaying(true);
-    howler.play();
+    playMusic();
   }
 
   function handlePrev() {
@@ -168,53 +246,53 @@ export default function Home() {
   }
 
   return (
-    <main className='max-w-[400px] mx-auto py-[0.8125rem] md:max-w-[768px]'>
-      <PlayBar
-        onNext={handleNext}
-        onPause={handlePause}
-        onPlay={handlePlay}
-        onClickLeft={() => {
-          setPlayDrawer(true);
-        }}
-        playing={playing}
-        music={currentMusic}
-      />
-      <SearchBar
-        searching={searchLoading}
-        onSearch={handleSearch}
-        onClear={handleClearSearch}
-      />
-      {searchList.length === 0 && (
-        <div
-          className='flex justify-center mt-4 text-green-800'
-          onClick={getRandomMusic}
-        >
-          随机音乐100首
-        </div>
-      )}
-      <PlayList onScrollToBottom={handleScrollToBottom}>
-        {searchList.map((x) => (
-          <PlayListItem
-            key={x.id}
-            title={x.name}
-            description={`${x.artist} - ${x.album}`}
-            onClickLeft={() => handlePlaySingle(x.id)}
-          />
-        ))}
-        {searchLoading && <PlayListLoading />}
-      </PlayList>
-      <PlayDrawer
-        playing={playing}
-        music={currentMusic!}
-        open={playDrawerOpen}
-        onOpenChange={() => {
-          setPlayDrawer(false);
-        }}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onPlay={handlePlay}
-        onPause={handlePause}
-      />
-    </main>
+    <HomeContext.Provider value={{ ...contextValue }}>
+      <main className='max-w-[400px] mx-auto py-[0.8125rem] md:max-w-[768px]'>
+        <PlayBar
+          onNext={handleNext}
+          onPause={handlePause}
+          onPlay={handlePlay}
+          onClickLeft={() => {
+            setPlayDrawer(true);
+          }}
+        />
+        <SearchBar
+          searching={searchLoading}
+          onSearch={handleSearch}
+          onClear={handleClearSearch}
+        />
+        {searchList.length === 0 && (
+          <div
+            className='flex justify-center mt-4 text-green-800'
+            onClick={getRandomMusic}
+          >
+            随机音乐100首
+          </div>
+        )}
+        <PlayList onScrollToBottom={handleScrollToBottom}>
+          {searchList.map((x) => (
+            <PlayListItem
+              key={x.id}
+              title={x.name}
+              description={`${x.artist} - ${x.album}`}
+              onClickLeft={() => handlePlayList(x.id)}
+            />
+          ))}
+          {searchLoading && <PlayListLoading />}
+        </PlayList>
+        <PlayDrawer
+          open={playDrawerOpen}
+          onOpenChange={() => {
+            setPlayDrawer(false);
+          }}
+          onPrev={handlePrev}
+          onNext={handleNext}
+          onPlay={handlePlay}
+          onPause={handlePause}
+        />
+      </main>
+    </HomeContext.Provider>
   );
 }
+
+export { initialState, HomeContext };

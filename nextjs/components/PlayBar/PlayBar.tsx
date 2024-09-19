@@ -3,11 +3,10 @@ import Image from 'next/image';
 import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
-import { IGetMusicSearchResult } from '@/interfaces/search';
+import { useContext } from 'react';
+import { HomeContext, PlayStatus } from '@/app/page';
 
 type Props = {
-  music?: IGetMusicSearchResult | null;
-  playing?: boolean;
   onPlay?: () => void;
   onPause?: () => void;
   onNext?: () => void;
@@ -15,24 +14,27 @@ type Props = {
 };
 
 const PlayBar = (props: Props) => {
-  const { music, playing, onPlay, onPause, onNext, onClickLeft } = props;
+  const {
+    state: { currentMusic, playStatus },
+  } = useContext(HomeContext);
+  const { onPlay, onPause, onNext, onClickLeft } = props;
 
   function handlePlay() {
-    music && onPlay && onPlay();
+    currentMusic && onPlay && onPlay();
   }
 
   function handlePause() {
-    music && onPause && onPause();
+    currentMusic && onPause && onPause();
   }
 
   function handleNext() {
-    music && onNext && onNext();
+    currentMusic && onNext && onNext();
   }
 
   function handleClickLeft() {
-    music && onClickLeft && onClickLeft();
+    onClickLeft && onClickLeft();
   }
-  const iconPathProps = { ...(music ? {} : { path: { fill: 'gray' } }) };
+  const iconPathProps = { ...(currentMusic ? {} : { path: { fill: 'gray' } }) };
 
   return (
     <div className='fixed z-10 bottom-3 right-0 left-0 max-w-3xl mx-auto px-3'>
@@ -43,24 +45,24 @@ const PlayBar = (props: Props) => {
         >
           <Image
             alt=''
-            src={music ? music.coverUrl : '/images/music.jpg'}
+            src={currentMusic ? currentMusic.coverUrl : '/images/music.jpg'}
             width={40}
             height={40}
             className='rounded-md'
           />
-          {music && (
+          {currentMusic && (
             <div>
               <div className='font-normal text-base truncate w-44'>
-                {music.name}
+                {currentMusic.name}
               </div>
               <div className='font-light text-sm truncate w-44 text-gray-500'>
-                {`${music.artist} - ${music.name}`}
+                {`${currentMusic.artist} - ${currentMusic.name}`}
               </div>
             </div>
           )}
         </div>
         <div className='flex items-center gap-2.5 justify-center w-1/4'>
-          {playing ? (
+          {playStatus === PlayStatus.playing ? (
             <span
               onClick={handlePause}
               className='flex justify-center items-center w-10 h-10'
