@@ -295,4 +295,4 @@ export default function Home() {
   );
 }
 
-export { initialState, HomeContext };
+export { HomeContext };
