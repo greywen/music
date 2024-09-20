@@ -13,8 +13,6 @@ import { useCreateReducer } from '@/hooks/useCreateReducer';
 import { PlayStatus } from '@/constants/common';
 import { HomeContext, InitialState } from '@/contexts/HomeContext';
 
-let playInterval: NodeJS.Timeout;
-
 const initialState: InitialState = {
   howler: undefined,
   currentMusic: undefined,
@@ -73,6 +71,7 @@ export default function Home() {
   }
 
   function prevMusic() {
+    setPlayStatus(PlayStatus.waiting);
     const index = playList.findIndex((x) => x.id === currentMusic!.id);
     if (index != 0) {
       setCurrentMusic(playList[index - 1]);
@@ -88,7 +87,6 @@ export default function Home() {
 
   function pauseMusic() {
     howler?.pause();
-    clearPlayInterval();
     setPlayStatus(PlayStatus.paused);
   }
 
@@ -105,12 +103,7 @@ export default function Home() {
   }
 
   function unloadMusic() {
-    clearPlayInterval();
     howler?.unload();
-  }
-
-  function clearPlayInterval() {
-    playInterval && clearInterval(playInterval);
   }
 
   useEffect(() => {
@@ -129,6 +122,12 @@ export default function Home() {
           format: ['mp3'],
           html5: true,
           autoplay: false,
+          onloaderror: () => {
+            dispatch({ field: 'playStatus', value: PlayStatus.error });
+          },
+          onplayerror: () => {
+            dispatch({ field: 'playStatus', value: PlayStatus.error });
+          },
         });
         dispatch({ field: 'howler', value: _howler });
 

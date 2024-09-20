@@ -28,6 +28,7 @@ export default function Lyric(props: Props) {
 
   useEffect(() => {
     if (howler) {
+      setLoading(true);
       if (containerRef.current) {
         containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       }

@@ -14,6 +14,7 @@ import { useContext, useState } from 'react';
 import { DEFAULT_COVER, PlayStatus } from '@/constants/common';
 import { HomeContext } from '@/contexts/HomeContext';
 import useImageLoader from '@/hooks/useImageLoader';
+import PlayProgress from '@/components/PlayProgress/PlayProgress';
 
 interface IProps {
   open: boolean;
@@ -53,7 +54,7 @@ const PlayDrawer = (props: IProps) => {
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
-        <Drawer.Content className='overflow-hidden fixed z-[9999] bottom-0 left-0 right-0 top-0 bg-white'>
+        <Drawer.Content className='overflow-hidden fixed z-[9999] bottom-0 left-0 right-0 top-0 bg-white focus-visible:outline-none'>
           <div className='mx-auto mt-4 h-2 w-24 rounded-full bg-[#f6f8ff]'></div>
           <div className='h-7 w-full'></div>
           <div
@@ -69,7 +70,7 @@ const PlayDrawer = (props: IProps) => {
                 height={230}
                 className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
                 onClick={() => {
-                  setShowLyric(true);
+                  currentMusic && setShowLyric(true);
                 }}
               />
             )}
@@ -93,9 +94,11 @@ const PlayDrawer = (props: IProps) => {
               </span> */}
             </div>
           </div>
-          <div></div>
-          <div className='h-32 w-full flex items-center justify-center'>
-            <div className='h-16 flex items-center w-3/5 justify-between'>
+          <div className='px-8 pt-2 w-full'>
+            {currentMusic && <PlayProgress />}
+          </div>
+          <div className='h-28 w-full flex items-center justify-center'>
+            <div className='h-16 flex items-center w-3/4 justify-between'>
               <span onClick={handlePrev}>
                 <PrevIcon svg={{ ...svgSize }} {...iconPathProps} />
               </span>
