@@ -12,3 +12,5 @@ export enum PlayStatus {
   error = 5,
   none = 6,
 }
+
+export const DEFAULT_COVER = '/images/music.jpg';

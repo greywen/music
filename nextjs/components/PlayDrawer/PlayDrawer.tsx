@@ -11,8 +11,9 @@ import {
 } from '../Icons';
 import Lyric from '../Lyric/Lyric';
 import { useContext, useState } from 'react';
-import { PlayStatus } from '@/constants/common';
+import { DEFAULT_COVER, PlayStatus } from '@/constants/common';
 import { HomeContext } from '@/contexts/HomeContext';
+import useImageLoader from '@/hooks/useImageLoader';
 
 interface IProps {
   open: boolean;
@@ -24,6 +25,7 @@ interface IProps {
 }
 
 const PlayDrawer = (props: IProps) => {
+  console.log('paly drawer render');
   const {
     state: { currentMusic, playStatus },
   } = useContext(HomeContext);
@@ -33,6 +35,7 @@ const PlayDrawer = (props: IProps) => {
   const playSvgSize = { width: 68, height: 68 };
   const iconPathProps = { ...(currentMusic ? {} : { path: { fill: 'gray' } }) };
 
+  const loaded = useImageLoader(currentMusic?.coverUrl);
   const [showLyric, setShowLyric] = useState(false);
 
   function handlePlay() {
@@ -50,8 +53,8 @@ const PlayDrawer = (props: IProps) => {
   return (
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
-        <Drawer.Content className='overflow-hidden fixed z-[9999] bottom-0 left-0 right-0 top-0 bg-[#f6f8ff]'>
-          <div className='mx-auto mt-4 h-2 w-24 rounded-full bg-white'></div>
+        <Drawer.Content className='overflow-hidden fixed z-[9999] bottom-0 left-0 right-0 top-0 bg-white'>
+          <div className='mx-auto mt-4 h-2 w-24 rounded-full bg-[#f6f8ff]'></div>
           <div className='h-7 w-full'></div>
           <div
             className={'px-8 py-6 flex justify-center items-center h-[350px]'}
@@ -61,9 +64,7 @@ const PlayDrawer = (props: IProps) => {
             ) : (
               <Image
                 alt=''
-                src={
-                  currentMusic ? currentMusic?.coverUrl : '/images/music.jpg'
-                }
+                src={loaded ? currentMusic?.coverUrl! : DEFAULT_COVER}
                 width={230}
                 height={230}
                 className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'

@@ -2,7 +2,7 @@
 import SearchBar from '@/components/SearchBar/SearchBar';
 import PlayListItem from '@/components/PlayList/PlayListItem';
 import PlayList from '@/components/PlayList/PlayList';
-import { createContext, MutableRefObject, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
 import { getMusicPlayUrl, randomMusic, search } from '@/apis/musicApi';
@@ -31,7 +31,6 @@ export default function Home() {
     state: { howler, currentMusic, playList },
     dispatch,
   } = contextValue;
-
   const initSearchParams = { query: '', pages: 1, count: 50 };
   const [searchParams, setSearchParams] =
     useState<IMusicSearchParams>(initSearchParams);
@@ -39,6 +38,8 @@ export default function Home() {
   const [searchList, setSearchList] = useState<IGetMusicSearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [playDrawerOpen, setPlayDrawer] = useState<boolean>(false);
+
+  console.log('page render');
 
   function handleClearSearch() {
     setSearchList([]);
@@ -128,11 +129,6 @@ export default function Home() {
           format: ['mp3'],
           html5: true,
           autoplay: false,
-          onplay: function () {
-            playInterval = setInterval(function () {
-              dispatch({ field: 'seek', value: _howler.seek() });
-            }, 100);
-          },
         });
         dispatch({ field: 'howler', value: _howler });
 

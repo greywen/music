@@ -4,8 +4,9 @@ import PlayIcon from '../Icons/PlayIcon';
 import PauseIcon from '../Icons/PauseIcon';
 import NextIcon from '../Icons/NextIcon';
 import { useContext } from 'react';
-import { PlayStatus } from '@/constants/common';
+import { DEFAULT_COVER, PlayStatus } from '@/constants/common';
 import { HomeContext } from '@/contexts/HomeContext';
+import useImageLoader from '@/hooks/useImageLoader';
 
 type Props = {
   onPlay?: () => void;
@@ -15,10 +16,12 @@ type Props = {
 };
 
 const PlayBar = (props: Props) => {
+  console.log('paly bar render');
   const {
     state: { currentMusic, playStatus },
   } = useContext(HomeContext);
   const { onPlay, onPause, onNext, onClickLeft } = props;
+  const loaded = useImageLoader(currentMusic?.coverUrl);
 
   function handlePlay() {
     currentMusic && onPlay && onPlay();
@@ -46,7 +49,7 @@ const PlayBar = (props: Props) => {
         >
           <Image
             alt=''
-            src={currentMusic ? currentMusic.coverUrl : '/images/music.jpg'}
+            src={loaded ? currentMusic?.coverUrl! : DEFAULT_COVER}
             width={40}
             height={40}
             className='rounded-md'
