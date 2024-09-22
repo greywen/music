@@ -30,20 +30,18 @@ const PlayProgress = () => {
       setValue(0);
       setDuration(0);
     }
-    if (howler && playStatus === PlayStatus.playing) {
-      setTimeout(() => {
+    if (playStatus === PlayStatus.playing && howler) {
+      setValue(Math.ceil(howler.seek()));
+      setDuration(howler.duration());
+      progressInterval && clearInterval(progressInterval);
+      progressInterval = setInterval(() => {
         setValue(Math.ceil(howler.seek()));
-        setDuration(howler.duration());
-        progressInterval && clearInterval(progressInterval);
-        progressInterval = setInterval(() => {
-          setValue(Math.ceil(howler.seek()));
-        }, 1000);
       }, 1000);
     }
     return () => {
       progressInterval && clearInterval(progressInterval);
     };
-  }, [howler, playStatus]);
+  }, [playStatus]);
 
   return (
     <div>
@@ -63,7 +61,9 @@ const PlayProgress = () => {
       </Slider.Root>
       <div className='flex text-[12px] text-[#777] w-full justify-between'>
         <span>{parseTime(value)}</span>
-        <span>{duration ? parseTime(duration) : '--:--'}</span>
+        <span className='text-sm'>
+          {duration ? parseTime(duration) : '--:--'}
+        </span>
       </div>
     </div>
   );

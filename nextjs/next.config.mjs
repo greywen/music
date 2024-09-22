@@ -13,7 +13,7 @@ const withPWA = nextPWA({
 const nextConfig = {
     images: {
         remotePatterns: [
-            { 
+            {
                 protocol: 'https',
                 hostname: 'io.anhejin.cn',
                 pathname: '**',

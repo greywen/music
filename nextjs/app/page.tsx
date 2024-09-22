@@ -5,7 +5,12 @@ import PlayList from '@/components/PlayList/PlayList';
 import { useEffect, useState } from 'react';
 import PlayBar from '@/components/PlayBar';
 import { Howl, Howler } from 'howler';
-import { getMusicPlayUrl, randomMusic, search } from '@/apis/musicApi';
+import {
+  getMusicLyric,
+  getMusicPlayUrl,
+  randomMusic,
+  search,
+} from '@/apis/musicApi';
 import { IMusicSearchParams, IGetMusicSearchResult } from '@/interfaces/search';
 import PlayDrawer from '@/components/PlayDrawer';
 import PlayListLoading from '@/components/PlayList/PlayListLoading';
@@ -19,6 +24,7 @@ const initialState: InitialState = {
   playList: [],
   playStatus: PlayStatus.none,
   seek: 0,
+  lyric: [],
 };
 
 export default function Home() {
@@ -109,7 +115,9 @@ export default function Home() {
   useEffect(() => {
     if (howler) {
       howler.play();
-      setPlayStatus(PlayStatus.playing);
+      setTimeout(() => {
+        setPlayStatus(PlayStatus.playing);
+      }, 800);
     }
   }, [howler]);
 
@@ -130,7 +138,6 @@ export default function Home() {
           },
         });
         dispatch({ field: 'howler', value: _howler });
-
         if ('mediaSession' in navigator) {
           navigator.mediaSession.setActionHandler('play', function () {
             playMusic();
@@ -153,6 +160,9 @@ export default function Home() {
         _howler.on('end', () => {
           nextMusic();
         });
+      });
+      getMusicLyric(currentMusic.id).then((data) => {
+        dispatch({ field: 'lyric', value: data });
       });
     }
   }, [currentMusic]);

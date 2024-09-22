@@ -60,20 +60,18 @@ const PlayDrawer = (props: IProps) => {
           <div
             className={'px-8 py-6 flex justify-center items-center h-[350px]'}
           >
-            {showLyric ? (
-              <Lyric onClick={() => setShowLyric(false)} />
-            ) : (
-              <Image
-                alt=''
-                src={loaded ? currentMusic?.coverUrl! : DEFAULT_COVER}
-                width={230}
-                height={230}
-                className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
-                onClick={() => {
-                  currentMusic && setShowLyric(true);
-                }}
-              />
-            )}
+            <Lyric onClick={() => setShowLyric(false)} />
+            {/* <Image
+              hidden={showLyric}
+              alt=''
+              src={loaded ? currentMusic?.coverUrl! : DEFAULT_COVER}
+              width={230}
+              height={230}
+              className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
+              onClick={() => {
+                currentMusic && setShowLyric(true);
+              }}
+            /> */}
           </div>
           <div className='px-8 w-full flex items-center'>
             <div className='w-3/4'>
@@ -95,7 +93,7 @@ const PlayDrawer = (props: IProps) => {
             </div>
           </div>
           <div className='px-8 pt-2 w-full'>
-            {currentMusic && <PlayProgress />}
+            <PlayProgress />
           </div>
           <div className='h-28 w-full flex items-center justify-center'>
             <div className='h-16 flex items-center w-3/4 justify-between'>

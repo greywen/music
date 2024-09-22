@@ -1,6 +1,5 @@
-import { getMusicLyric } from '@/apis/musicApi';
+import { PlayStatus } from '@/constants/common';
 import { HomeContext } from '@/contexts/HomeContext';
-import { IGetLyricResult } from '@/interfaces/lyric';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -10,11 +9,10 @@ interface Props {
 let seekInterval: NodeJS.Timeout;
 export default function Lyric(props: Props) {
   const {
-    state: { currentMusic, howler },
+    state: { currentMusic, howler, playStatus, lyric },
   } = useContext(HomeContext);
   const { onClick } = props;
 
-  const [lyric, setLyric] = useState<IGetLyricResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [seek, setSeek] = useState(0);
   const lyricsRefs = useRef<HTMLParagraphElement[]>([]);
@@ -27,16 +25,12 @@ export default function Lyric(props: Props) {
   }
 
   useEffect(() => {
-    if (howler) {
+    if (howler && playStatus === PlayStatus.playing) {
       setLoading(true);
       if (containerRef.current) {
         containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      if (currentMusic) {
-        getMusicLyric(currentMusic.id).then((data) => {
-          setLyric(data);
-        });
-      }
+
       seekInterval && clearInterval(seekInterval);
       seekInterval = setInterval(() => {
         setSeek(howler?.seek() || 0);
@@ -46,9 +40,12 @@ export default function Lyric(props: Props) {
     return () => {
       seekInterval && clearInterval(seekInterval);
     };
-  }, [howler]);
+  }, [playStatus]);
 
   useEffect(() => {
+    if (playStatus !== PlayStatus.playing) {
+      return;
+    }
     for (let i = 0; i < lyric.length; i++) {
       if (
         seek >= parseTime(lyric[i].time) &&
@@ -72,19 +69,17 @@ export default function Lyric(props: Props) {
       onClick={() => {
         onClick && onClick();
       }}
+      key={'lyric' + currentMusic?.lyricId}
       ref={containerRef}
-      className='overflow-y-scroll overflow-x-hidden max-h-[300px] w-full text-base transparent-scroll text-wrap touch-none text-gray text-center'
+      className='overflow-y-scroll max-h-[300px] w-full text-base transparent-scroll text-wrap touch-none text-gray text-center'
     >
-      {loading && <p className='py-1 text-sm'>加载中...</p>}
       {lyric.map((x, index) => (
         <p
-          className='py-1'
           key={'lyric' + index}
           ref={(el) => (lyricsRefs.current[index] = el!) as any}
-          style={{
-            color: index === currentIndex.current ? '#166534' : '',
-            fontWeight: index === currentIndex.current ? 'bold' : '',
-          }}
+          className={`py-1 ${
+            index === currentIndex.current ? 'text-bold text-[#166534]' : ''
+          }`}
         >
           {x.content}
         </p>

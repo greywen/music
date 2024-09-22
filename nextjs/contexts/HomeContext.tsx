@@ -1,4 +1,5 @@
 import { PlayStatus } from '@/constants/common';
+import { IGetLyricResult } from '@/interfaces/lyric';
 import { IGetMusicSearchResult } from '@/interfaces/search';
 import { createContext } from 'react';
 
@@ -7,6 +8,7 @@ export interface InitialState {
   currentMusic?: IGetMusicSearchResult;
   playList: IGetMusicSearchResult[];
   playStatus: PlayStatus;
+  lyric: IGetLyricResult[];
   seek: number;
 }
 
