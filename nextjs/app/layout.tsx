@@ -14,6 +14,7 @@ export default function RootLayout({
           content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
         ></meta>
 
+        <link rel='icon' type='image/x-icon' href='/favicon.ico' />
         <link
           rel='manifest'
           href='/manifest.json'

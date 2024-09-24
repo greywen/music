@@ -4,10 +4,13 @@ function useImageLoader(src?: string) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (!src) return;
-    const img = new Image();
-    img.src = src;
-    img.onload = () => setLoaded(true);
+    setLoaded(false);
+    if (src) {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => setLoaded(true);
+      img.onerror = () => setLoaded(false);
+    }
   }, [src]);
 
   return loaded;

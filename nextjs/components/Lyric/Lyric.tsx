@@ -3,6 +3,7 @@ import { HomeContext } from '@/contexts/HomeContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 interface Props {
+  hidden: boolean;
   onClick?: () => void;
 }
 
@@ -11,22 +12,22 @@ export default function Lyric(props: Props) {
   const {
     state: { currentMusic, howler, playStatus, lyric },
   } = useContext(HomeContext);
-  const { onClick } = props;
+  const { hidden, onClick } = props;
 
-  const [loading, setLoading] = useState(true);
   const [seek, setSeek] = useState(0);
   const lyricsRefs = useRef<HTMLParagraphElement[]>([]);
   const currentIndex = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [firstLyricsLoading, setFirstLyricsLoading] = useState(false);
 
   function parseTime(time: string) {
     const [min, sec] = time.split(':');
-    return parseFloat(min) * 60 + parseFloat(sec);
+    return parseFloat(min) * 60 + (parseFloat(sec) - 0.2);
   }
 
   useEffect(() => {
     if (howler && playStatus === PlayStatus.playing) {
-      setLoading(true);
+      setFirstLyricsLoading(false);
       if (containerRef.current) {
         containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -52,26 +53,27 @@ export default function Lyric(props: Props) {
         (i === lyric.length - 1 || seek < parseTime(lyric[i + 1].time))
       ) {
         currentIndex.current = i;
+        setFirstLyricsLoading(true);
         break;
       }
     }
     if (lyricsRefs.current[currentIndex.current]) {
       lyricsRefs.current[currentIndex.current].scrollIntoView({
-        behavior: loading ? 'instant' : 'smooth',
+        behavior: 'smooth',
         block: 'center',
       });
-      setLoading(false);
     }
   }, [seek]);
 
   return (
     <div
+      hidden={hidden}
       onClick={() => {
         onClick && onClick();
       }}
       key={'lyric' + currentMusic?.lyricId}
       ref={containerRef}
-      className='overflow-y-scroll max-h-[300px] w-full text-base transparent-scroll text-wrap touch-none text-gray text-center'
+      className='overflow-y-scroll max-h-[300px] w-full text-base transparent-scroll text-wrap touch-none text-gray text-center translate'
     >
       {lyric.map((x, index) => (
         <p

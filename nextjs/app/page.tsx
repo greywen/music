@@ -17,6 +17,7 @@ import PlayListLoading from '@/components/PlayList/PlayListLoading';
 import { useCreateReducer } from '@/hooks/useCreateReducer';
 import { PlayStatus } from '@/constants/common';
 import { HomeContext, InitialState } from '@/contexts/HomeContext';
+import useWakeLock from '@/hooks/useWakeLock';
 
 const initialState: InitialState = {
   howler: undefined,
@@ -36,6 +37,7 @@ export default function Home() {
     dispatch,
   } = contextValue;
   const initSearchParams = { query: '', pages: 1, count: 50 };
+  useWakeLock();
   const [searchParams, setSearchParams] =
     useState<IMusicSearchParams>(initSearchParams);
   const [totalCount, setTotalCount] = useState(0);
@@ -86,7 +88,6 @@ export default function Home() {
   }
 
   function playMusic() {
-    console.log('howler', howler);
     howler?.play();
     setPlayStatus(PlayStatus.playing);
   }
@@ -115,9 +116,9 @@ export default function Home() {
   useEffect(() => {
     if (howler) {
       howler.play();
-      setTimeout(() => {
+      howler.on('play', () => {
         setPlayStatus(PlayStatus.playing);
-      }, 800);
+      });
     }
   }, [howler]);
 

@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { Drawer } from 'vaul';
 import {
   StarIcon,
@@ -11,10 +10,11 @@ import {
 } from '../Icons';
 import Lyric from '../Lyric/Lyric';
 import { useContext, useState } from 'react';
-import { DEFAULT_COVER, PlayStatus } from '@/constants/common';
+import { PlayStatus } from '@/constants/common';
 import { HomeContext } from '@/contexts/HomeContext';
 import useImageLoader from '@/hooks/useImageLoader';
 import PlayProgress from '@/components/PlayProgress/PlayProgress';
+import Cover from '../Cover/Cover';
 
 interface IProps {
   open: boolean;
@@ -36,7 +36,6 @@ const PlayDrawer = (props: IProps) => {
   const playSvgSize = { width: 68, height: 68 };
   const iconPathProps = { ...(currentMusic ? {} : { path: { fill: 'gray' } }) };
 
-  const loaded = useImageLoader(currentMusic?.coverUrl);
   const [showLyric, setShowLyric] = useState(false);
 
   function handlePlay() {
@@ -60,18 +59,12 @@ const PlayDrawer = (props: IProps) => {
           <div
             className={'px-8 py-6 flex justify-center items-center h-[350px]'}
           >
-            <Lyric onClick={() => setShowLyric(false)} />
-            {/* <Image
+            <Lyric hidden={!showLyric} onClick={() => setShowLyric(false)} />
+            <Cover
+              url={currentMusic?.coverUrl}
               hidden={showLyric}
-              alt=''
-              src={loaded ? currentMusic?.coverUrl! : DEFAULT_COVER}
-              width={230}
-              height={230}
-              className='rounded-lg w-[82%] h-[82%] max-h-[320px] max-w-[320px]'
-              onClick={() => {
-                currentMusic && setShowLyric(true);
-              }}
-            /> */}
+              onClick={() => setShowLyric(true)}
+            />
           </div>
           <div className='px-8 w-full flex items-center'>
             <div className='w-3/4'>
