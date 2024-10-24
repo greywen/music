@@ -1,3 +1,4 @@
+import path from 'path';
 import { IMusic, MusicBr } from '../interfaces/music';
 import {
   getCover,
@@ -32,8 +33,8 @@ export default async function download(musicList: IMusic[]) {
   try {
     for (const music of musicList) {
       const { id, source, name, lyric_id, artist, album } = music;
-      let singerPath = `${process.env.MUSIC_SAVE_PATH}\\${artist[0]}`;
-      if (album) singerPath += '\\' + album;
+      let singerPath = path.join(`${process.env.MUSIC_SAVE_PATH}`, artist[0]);
+      if (album) singerPath = path.join(singerPath, album);
       await createFolder(singerPath);
       const musicName = `${artist.join()} - ${name}`;
 
@@ -43,9 +44,10 @@ export default async function download(musicList: IMusic[]) {
       ) {
         const { musicInfo } = await getMusicDownloadInfo(music);
         if (musicInfo?.url) {
-          const musicPath = `${singerPath}/${musicName}${getUrlExtension(
-            musicInfo.url
-          )}`;
+          const musicPath = path.join(
+            singerPath,
+            musicName + getUrlExtension(musicInfo.url)
+          );
           console.log('music', musicPath);
           await downloadFile({
             url: musicInfo.url,
@@ -54,7 +56,7 @@ export default async function download(musicList: IMusic[]) {
         }
       }
 
-      const lyricPath = `${singerPath}/${musicName}.lrc`;
+      const lyricPath = path.join(singerPath, musicName + '.lrc');
       if (!(await fs.existsSync(lyricPath))) {
         const lyric = await getLyric({ id: lyric_id, source });
         if (lyric.lyric) {
@@ -74,8 +76,9 @@ export default async function download(musicList: IMusic[]) {
       // }
       downloadedIds.push(id);
     }
-  } catch (e) { console.log('download error: ', e); } finally {
-
+  } catch (e) {
+    console.log('download error: ', e);
+  } finally {
     return downloadedIds;
   }
 }
