@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "nextjs/**"
   workflow_dispatch:
 
 jobs:
@@ -19,7 +17,6 @@ jobs:
 
       - name: Build container
         run: |
-          cd nextjs
           docker build -t music .
 
       - name: Tag container with 'latest' & run number
