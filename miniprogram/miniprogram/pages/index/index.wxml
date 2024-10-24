@@ -1,4 +1,0 @@
-<!--index.wxml-->
-<view class="container">
-  <t-search class="serach" disabled bind:tap="onSearch" value="{{value}}" placeholder="请输入关键词" />
-</view>

@@ -1,24 +1,11 @@
-# miniprogram
-/miniprogram/node_modules
-/miniprogram/miniprogram/miniprogram_npm
-
 # nextjs
-/nextjs/node_modules
-/nextjs/.next
-/nextjs/out
-/nextjs/build
-/nextjs/.env
-/nextjs/next-env.d.ts
-/nextjs/dist
-
-#prisma
-/nextjs/prisma/migrations
+/node_modules
+/.next
+/out
+/build
+/.env
+/next-env.d.ts
+/dist
 
 #data
-/nextjs/data
-
-#pwa
-/nextjs/public/sw*.js
-/nextjs/public/sw*.js.map
-/nextjs/public/workbox*.js
-/nextjs/public/workbox*.js.map
+/data
