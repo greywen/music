@@ -87,7 +87,7 @@ const Home = () => {
 
   return (
     <div className='h-full'>
-      <div className=' bg-gray-50 w-full sticky top-0'>
+      <div className='flex items-center bg-gray-50 h-20 w-full rounded-md sticky top-0'>
         <div className='flex h-12 rounded-md'>
           <select
             className='flex-none rounded-l-md border-none px-3 bg-gray-50 focus:outline-none'
@@ -110,32 +110,36 @@ const Home = () => {
           />
           <button
             disabled={downloading}
-            className={`${
-              musicList.filter((x) => x.checked).length === 0 && 'hidden'
-            } flex-none min-w-12 flex justify-center align-middle items-center border-none bg-gray-50 px-2 focus:outline-none`}
+            className={`
+              ${musicList.filter((x) => x.checked).length === 0 && 'hidden'} 
+              flex-none flex justify-center align-middle items-center border-none bg-gray-50 px-2 focus:outline-none`}
             onClick={download}
           >
-            <svg
-              className={`${downloading && 'animate-bounce'}`}
-              viewBox='0 0 1024 1024'
-              version='1.1'
-              xmlns='http://www.w3.org/2000/svg'
-              width='16'
-              height='16'
-            >
-              <path
-                d='M512 102.4a40.96 40.96 0 0 1 40.96 40.96v552.96a40.96 40.96 0 1 1-81.92 0V143.36a40.96 40.96 0 0 1 40.96-40.96zM757.76 880.64a40.96 40.96 0 0 1-40.96 40.96H307.2a40.96 40.96 0 1 1 0-81.92h409.6a40.96 40.96 0 0 1 40.96 40.96z'
-                fill='#000000'
-              ></path>
-              <path
-                d='M513.06496 714.30144l203.22304-203.22304a40.96 40.96 0 1 1 57.91744 57.93792L542.5152 800.70656c-0.8192 0.8192-1.6384 1.57696-2.49856 2.29376a40.96 40.96 0 0 1-55.95136-1.8432L252.35456 569.46688a40.96 40.96 0 0 1 57.93792-57.93792l202.752 202.77248z'
-                fill='#000000'
-              ></path>
-            </svg>
+            {downloading ? (
+              <svg
+                className={`${downloading && 'animate-bounce'}`}
+                viewBox='0 0 1024 1024'
+                version='1.1'
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+              >
+                <path
+                  d='M512 102.4a40.96 40.96 0 0 1 40.96 40.96v552.96a40.96 40.96 0 1 1-81.92 0V143.36a40.96 40.96 0 0 1 40.96-40.96zM757.76 880.64a40.96 40.96 0 0 1-40.96 40.96H307.2a40.96 40.96 0 1 1 0-81.92h409.6a40.96 40.96 0 0 1 40.96 40.96z'
+                  fill='#000000'
+                ></path>
+                <path
+                  d='M513.06496 714.30144l203.22304-203.22304a40.96 40.96 0 1 1 57.91744 57.93792L542.5152 800.70656c-0.8192 0.8192-1.6384 1.57696-2.49856 2.29376a40.96 40.96 0 0 1-55.95136-1.8432L252.35456 569.46688a40.96 40.96 0 0 1 57.93792-57.93792l202.752 202.77248z'
+                  fill='#000000'
+                ></path>
+              </svg>
+            ) : (
+              '下载'
+            )}
           </button>
         </div>
       </div>
-      <div className='p-4  space-y-2'>
+      <div className='p-4 space-y-2'>
         {musicList.map((music, index) => (
           <div
             className='flex items-center overflow-hidden h-10 bg-white border border-gray-200 rounded-lg p-2'
