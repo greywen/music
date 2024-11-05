@@ -1,4 +1,4 @@
-export type Source = 'tencent' | 'netease';
+export type Source = 'tencent' | 'netease' | 'kuwo' | 'kugou';
 export type MusicBr = 128 | 192 | 320 | 740 | 999;
 export type CoverImgSize = 300 | 500;
 

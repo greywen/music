@@ -97,6 +97,8 @@ const Home = () => {
             }}
           >
             <option value='netease'>网易云音乐</option>
+            <option value='kuwo'>酷我</option>
+            <option value='kugou'>酷狗</option>
             <option value='tencent'>QQ音乐</option>
           </select>
           <input
