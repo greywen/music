@@ -39,7 +39,6 @@ export async function downloadFile(
         file.on('finish', () => {
           file.close();
           resolve(filePath);
-          fs.chmod(filePath, '0o666', () => { });
         });
       })
       .on('error', (err) => {

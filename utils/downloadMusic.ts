@@ -61,7 +61,7 @@ export default async function download(musicList: IMusic[]) {
         const lyric = await getLyric({ id: lyric_id, source });
         if (lyric.lyric) {
           console.log('lyric', lyricPath);
-          await fs.writeFileSync(lyricPath, lyric.lyric, { encoding: 'utf-8', mode: '0o666' });
+          await fs.writeFileSync(lyricPath, lyric.lyric, { encoding: 'utf-8' });
         }
       }
 
