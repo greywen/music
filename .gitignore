@@ -9,3 +9,7 @@
 
 #data
 /data
+
+#metadata
+/metadata/venv
+/metadata/__pycache__
