@@ -14,13 +14,18 @@ class Metadata(BaseModel):
     date: str = None
     artist: list = None
     
+class UpdateMetadataRequest(BaseModel):
+    filePath: str
+    coverUrl: str = None
+    metadata: Metadata = None
+    
 @app.post("/metadata/update")
-def update_music_metadata(filePath: str, coverUrl: str = None, metadata: Metadata = None):
+def update_music_metadata(request: UpdateMetadataRequest):
     try:
-        if coverUrl != None: 
-            update_flac_cover_image_from_url(filePath, coverUrl)
-        if metadata != None: 
-            update_flac_metadata(filePath, metadata)
+        if request.coverUrl != None: 
+            update_flac_cover_image_from_url(request.filePath, request.coverUrl)
+        if request.metadata != None: 
+            update_flac_metadata(request.filePath, request.metadata)
         return {
             'code': 200,
             'text': "修改成功",
@@ -28,7 +33,7 @@ def update_music_metadata(filePath: str, coverUrl: str = None, metadata: Metadat
     except Exception as e:
         return {
             'code': 400,
-            'text': "修改失败"+ e,
+            'text': "修改失败" + e,
         }
 
 @app.get("/qq/{name}")
@@ -94,6 +99,6 @@ def update_flac_metadata(file_path, metadata: Metadata):
     audio.save()
     print(f"元数据已更新: {file_path}")
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=3001)

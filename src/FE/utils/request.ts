@@ -12,6 +12,7 @@ export async function fetchJson<T>(
   try {
     const response = await fetch(url, {
       method,
+      redirect: 'follow',
       headers: {
         'Content-Type': 'application/json',
         ...headers,

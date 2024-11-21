@@ -7,7 +7,7 @@ src/FE/.env
 src/FE/next-env.d.ts
 
 #data
-src/FE/data
+data
 
 #metadata
 src/Metadata/venv
