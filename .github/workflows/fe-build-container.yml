@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/FE'
+      - 'src/FE/**'
       - '.github/workflows/fe-build-container.yml'
   workflow_dispatch:
 
@@ -20,7 +20,7 @@ jobs:
 
       - name: Build container
         run: |
-          docker build -t music .
+          cd src/FE && docker build -t music .
 
       - name: Tag container with 'latest' & run number
         run: |

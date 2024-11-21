@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/Metadata'
+      - 'src/Metadata/**'
       - '.github/workflows/metadata-build-container.yml'
   workflow_dispatch:
 
@@ -20,7 +20,7 @@ jobs:
 
       - name: Build container
         run: |
-          docker build -t music-metadata .
+          cd src/Metadata && docker build -t music-metadata .
 
       - name: Tag container with 'latest' & run number
         run: |
