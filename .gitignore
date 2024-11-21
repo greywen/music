@@ -1,15 +1,14 @@
-# nextjs
-/node_modules
-/.next
-/out
-/build
-/.env
-/next-env.d.ts
-/dist
+# FE
+src/FE/node_modules
+src/FE/.next
+src/FE/out
+src/FE/build
+src/FE/.env
+src/FE/next-env.d.ts
 
 #data
-/data
+src/FE/data
 
 #metadata
-/metadata/venv
-/metadata/__pycache__
+src/Metadata/venv
+src/Metadata/__pycache__

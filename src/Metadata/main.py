@@ -94,5 +94,6 @@ def update_flac_metadata(file_path, metadata: Metadata):
     audio.save()
     print(f"元数据已更新: {file_path}")
 
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

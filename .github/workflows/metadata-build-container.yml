@@ -1,0 +1,33 @@
+name: Metadata Build Container
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/Metadata'
+      - '.github/workflows/metadata-build-container.yml'
+  workflow_dispatch:
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login container
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_REGISTRY }} --password-stdin
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build container
+        run: |
+          docker build -t music-metadata .
+
+      - name: Tag container with 'latest' & run number
+        run: |
+          docker tag music ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music-metadata:${{ github.run_number }}
+          docker tag music ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music-metadata:latest
+
+      - name: Push container
+        run: |
+          docker push ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music-metadata:${{ github.run_number }}
+          docker push ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_NAMESPACE }}/music-metadata:latest

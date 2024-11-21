@@ -1,8 +1,11 @@
-name: Build Container
+name: FE Build Container
 on:
   push:
     branches:
       - main
+    paths:
+      - 'src/FE'
+      - '.github/workflows/fe-build-container.yml'
   workflow_dispatch:
 
 jobs:
