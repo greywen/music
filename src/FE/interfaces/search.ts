@@ -1,14 +1,5 @@
 import { Source } from './music';
 
-export interface IGetMusicSearchResult {
-  id: number;
-  name: string;
-  lyricId: number;
-  artist: string;
-  album: string;
-  coverUrl: string;
-}
-
 export interface IGetMusicSearchPage {
   id: string;
   name: string;

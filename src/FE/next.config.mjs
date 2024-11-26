@@ -1,7 +1,7 @@
 const nextConfig = {
     images: {
         remotePatterns: [
-            
+
         ],
     },
 };
