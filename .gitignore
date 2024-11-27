@@ -2,6 +2,7 @@
 src/FE/node_modules
 src/FE/.next
 src/FE/out
+src/FE/dist
 src/FE/build
 src/FE/.env
 src/FE/next-env.d.ts
