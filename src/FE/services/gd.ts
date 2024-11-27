@@ -1,6 +1,9 @@
 import { CoverImgSize, MusicBr, Source } from '../interfaces/music';
 import { fetchJson } from '../utils/request';
 
+const SEARCH_MUSIC_API_URL = process.env.SEARCH_MUSIC_API_URL;
+const DOWNLOAD_MUSIC_API_URL = process.env.DOWNLOAD_MUSIC_API_URL;
+
 interface IGetMusicListParams {
   name: string;
   source?: Source;
@@ -18,9 +21,6 @@ interface IGetMusicListResult {
   lyric_id: string;
   source: Source;
 }
-
-const SEARCH_MUSIC_API_URL = process.env.SEARCH_MUSIC_API_URL;
-const DOWNLOAD_MUSIC_API_URL = process.env.DOWNLOAD_MUSIC_API_URL;
 
 export async function getMusicList(params: IGetMusicListParams) {
   const { name, source = 'tencent', pages = 1, count = 20 } = params;
@@ -74,7 +74,7 @@ export async function getMusicInfo(params: IGetMusicInfoParams) {
 export async function getMusicInfoByApi(
   params: IGetMusicInfoParams
 ): Promise<IGetMusicInfoResult> {
-  const { id, source = 'tencent', br = 999 } = params;
+  const { id, source, br = 999 } = params;
   const url = `${SEARCH_MUSIC_API_URL}/api.php?types=url&source=${source}&id=${id}&br=${br}`;
   const response = await fetch(url);
   return await response.json();

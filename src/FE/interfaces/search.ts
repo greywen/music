@@ -21,7 +21,7 @@ export interface IDownloadMusicParams {
   source: Source;
 }
 
-export interface IMusicSearchByGdParams {
+export interface IMusicSearchParams {
   name: string;
   source: Source;
   count: number;

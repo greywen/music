@@ -5,7 +5,7 @@ import {
   getLyric,
   getMusicInfo,
   getMusicInfoByApi,
-} from '../services/music';
+} from '../services/gd';
 import createFolder from '../utils/createFolder';
 import { downloadFile, getUrlExtension } from '../utils/downloadFile';
 import fs from 'fs';
@@ -62,10 +62,9 @@ export default async function download(musicList: IMusic[]) {
       if (album) singerPath = path.join(singerPath, album);
       await createFolder(singerPath);
       const musicName = `${artist.join()} - ${name}`;
-
       if (
-        !(await fs.existsSync(musicName + '.flac')) &&
-        !(await fs.existsSync(musicName + '.mp3'))
+        !(await fs.existsSync(path.join(singerPath, musicName + '.flac'))) &&
+        !(await fs.existsSync(path.join(singerPath, musicName + '.mp3')))
       ) {
         const { musicInfo } = await getMusicDownloadInfo(music);
         if (musicInfo?.url) {
@@ -73,41 +72,47 @@ export default async function download(musicList: IMusic[]) {
             singerPath,
             musicName + getUrlExtension(musicInfo.url)
           );
-          console.log('music', musicPath);
+          console.log('Song Path:', musicPath);
           await downloadFile({
             url: musicInfo.url,
             filePath: musicPath,
           });
 
           const coverUrl = album ? await downloadCover(music) : undefined;
-          if (coverUrl) {
+          if (coverUrl && METADATA_SERVER_URL) {
             const data = await setMusicMetadata(musicPath, coverUrl, {
               title: name,
               album,
               artist,
             });
             if (data?.code === 200) {
-              console.log('metadata successful');
+              console.log('Metadata written successfully');
             } else {
-              console.log(JSON.stringify(data));
-              console.log('metadata failed');
+              console.log('Metadata write failure: ', JSON.stringify(data));
             }
           }
         }
+      } else {
+        console.log('The music already exists: ', musicName);
       }
 
       const lyricPath = path.join(singerPath, musicName + '.lrc');
       if (!(await fs.existsSync(lyricPath))) {
         const lyric = await getLyric({ id: lyric_id, source });
+
         if (lyric.lyric) {
-          console.log('lyric', lyricPath);
+          console.log('Lyrics Path: ', lyricPath);
           await fs.writeFileSync(lyricPath, lyric.lyric, { encoding: 'utf-8' });
+        } else {
+          console.log('Lyrics not found');
         }
+      } else {
+        console.log('The lyrics already exists: ', lyricPath);
       }
       downloadedIds.push(id);
     }
-  } catch (e) {
-    console.log('download error: ', e);
+  } catch (err) {
+    console.log('Download failed: ', err);
   } finally {
     return downloadedIds;
   }

@@ -1,5 +1,5 @@
 'use client';
-import { downloadMusic, searchByGd } from '@/apis/musicApi';
+import { download, search } from '@/apis/music';
 import { Source } from '@/interfaces/music';
 import { IGetMusicSearchPage } from '@/interfaces/search';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
-  function search() {
+  function handleSearch() {
     const fetchParams = { ...params, pages: 1 };
     setMusicList([]);
     if (!fetchParams.name.trim()) {
@@ -24,7 +24,7 @@ const Home = () => {
     }
     setLoading(true);
     setParams(fetchParams);
-    searchByGd({ ...fetchParams })
+    search({ ...fetchParams })
       .then((data) => {
         setMusicList(
           data.map((x) => {
@@ -39,7 +39,7 @@ const Home = () => {
 
   function keyDownSearch(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && !loading) {
-      search();
+      handleSearch();
     }
   }
 
@@ -47,7 +47,7 @@ const Home = () => {
     const fetchParams = { ...params, pages: params.pages + 1 };
     setParams(fetchParams);
     setLoading(true);
-    searchByGd({ ...fetchParams })
+    search({ ...fetchParams })
       .then((data) => {
         setMusicList([...musicList, ...data]);
       })
@@ -56,17 +56,17 @@ const Home = () => {
       });
   }
 
-  function selectMusic(index: number) {
+  function handleSelect(index: number) {
     const musics = [...musicList];
     musics[index].checked = !musics[index].checked;
     setMusicList(musics);
   }
 
-  function download() {
+  function handleDownload() {
     setDownloading(true);
     const downloadList = musicList.filter((x) => x.checked);
     if (downloadList.length === 0) return;
-    downloadMusic(downloadList)
+    download(downloadList)
       .then((data) => {
         setMusicList(
           musicList.map((x) => {
@@ -97,8 +97,8 @@ const Home = () => {
             }}
           >
             <option value='netease'>网易云音乐</option>
-            <option value='kuwo'>酷我</option>
             <option value='kugou'>酷狗</option>
+            <option value='kuwo'>酷我</option>
             <option value='tencent'>QQ音乐</option>
           </select>
           <input
@@ -115,7 +115,7 @@ const Home = () => {
             className={`
               ${musicList.filter((x) => x.checked).length === 0 && 'hidden'} 
               flex-none flex justify-center align-middle items-center border-none bg-gray-50 px-2 focus:outline-none`}
-            onClick={download}
+            onClick={handleDownload}
           >
             {downloading ? (
               <svg
@@ -147,7 +147,7 @@ const Home = () => {
             className='flex items-center overflow-hidden h-10 bg-white border border-gray-200 rounded-lg p-2'
             key={music.id}
             onClick={() => {
-              selectMusic(index);
+              handleSelect(index);
             }}
           >
             <input className='mr-2' type='checkbox' checked={music.checked} />

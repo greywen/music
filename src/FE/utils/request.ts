@@ -22,6 +22,6 @@ export async function fetchJson<T>(
 
     return (await response.json()) as T;
   } catch (err) {
-    throw new Error('Failed to fetch data' + url);
+    throw new Error('Failed to fetch data ' + url);
   }
 }
