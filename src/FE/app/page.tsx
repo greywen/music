@@ -144,16 +144,18 @@ const Home = () => {
       <div className='p-4 space-y-2'>
         {musicList.map((music, index) => (
           <div
-            className='flex items-center overflow-hidden h-10 bg-white border border-gray-200 rounded-lg p-2'
+            className={`flex items-center overflow-hidden h-14 bg-white border rounded-lg p-2 ${
+              music.checked ? 'border-indigo-500' : 'border-gray-200'
+            }`}
             key={music.id}
             onClick={() => {
               handleSelect(index);
             }}
           >
-            <input className='mr-2' type='checkbox' checked={music.checked} />
-            <span className='text-sm text-gray-800 text-ellipsis whitespace-nowrap overflow-hidden'>
-              {music.name} - {music.artist} - {music.album}
-            </span>
+            <div className='text-sm text-gray-800 whitespace-nowrap overflow-hidden'>
+              <div>{music.name} - {music.artist}</div>
+              <div>{music.album}</div>
+            </div>
           </div>
         ))}
       </div>
