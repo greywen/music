@@ -13,13 +13,18 @@ function removeSpecialCharacters(name: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { ids, source = 'netease' } = (await request.json()) as {
+    const { ids, source } = (await request.json()) as {
       ids: number[];
       source: string;
     };
     if (!ids || ids.length === 0) {
       throw new Error('Ids is required');
     }
+
+    if (!source) {
+      throw new Error('Source is required');
+    }
+
     const topIds = TOP_IDS.filter((id) => ids.includes(id));
     const topResult = await getTopList();
 
@@ -28,7 +33,10 @@ export async function POST(request: NextRequest) {
       topResult.data
         .filter((x) => topIds.includes(x.id))
         .forEach((x) => {
-          songList.push(...x.songList);
+          x.songList.forEach((s) => {
+            if (!songList.find((sl) => s.songname == sl.songname))
+              songList.push(s);
+          });
         });
 
       console.log('Number of chart songs: ', songList.length);

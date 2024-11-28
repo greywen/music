@@ -14,7 +14,7 @@ app.prepare().then(() => {
   async function downloadJob() {
     console.log('Start downloading the latest daily leaderboard tasks');
     try {
-      for (const item of ['kuwo', 'kugou', 'netease']) {
+      for (const item of ['kuwo', 'kugou', 'tencent']) {
         console.log(`Downloading with: ${item}`);
         await fetchJson(`${apiUrl}/music/download/rank`, {
           method: 'POST',
@@ -33,10 +33,6 @@ app.prepare().then(() => {
   });
 
   cron.schedule('0 1 7 * * *', async () => {
-    await downloadJob();
-  });
-
-  cron.schedule('0 19 17 * * *', async () => {
     await downloadJob();
   });
 
